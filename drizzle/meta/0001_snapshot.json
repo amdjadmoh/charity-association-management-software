@@ -1,0 +1,701 @@
+{
+  "id": "a0c139d5-45e9-4a32-9f78-06f84092b3bc",
+  "prevId": "d874b7d0-0e9f-4e2d-b7e9-be88f665b7e5",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.Absence": {
+      "name": "Absence",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "date": {
+          "name": "date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "seanceId": {
+          "name": "seanceId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "teacherId": {
+          "name": "teacherId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Absence_seanceId_Seance_id_fk": {
+          "name": "Absence_seanceId_Seance_id_fk",
+          "tableFrom": "Absence",
+          "tableTo": "Seance",
+          "columnsFrom": [
+            "seanceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "Absence_teacherId_Teacher_id_fk": {
+          "name": "Absence_teacherId_Teacher_id_fk",
+          "tableFrom": "Absence",
+          "tableTo": "Teacher",
+          "columnsFrom": [
+            "teacherId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Grade": {
+      "name": "Grade",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "GradeName": {
+          "name": "GradeName",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "PricePerHour": {
+          "name": "PricePerHour",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Sessions": {
+      "name": "Sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "startDate": {
+          "name": "startDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "finishDate": {
+          "name": "finishDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "teacherId": {
+          "name": "teacherId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Sessions_teacherId_Teacher_id_fk": {
+          "name": "Sessions_teacherId_Teacher_id_fk",
+          "tableFrom": "Sessions",
+          "tableTo": "Teacher",
+          "columnsFrom": [
+            "teacherId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Promotion": {
+      "name": "Promotion",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "specialityId": {
+          "name": "specialityId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Promotion_specialityId_Speciality_id_fk": {
+          "name": "Promotion_specialityId_Speciality_id_fk",
+          "tableFrom": "Promotion",
+          "tableTo": "Speciality",
+          "columnsFrom": [
+            "specialityId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Schedule": {
+      "name": "Schedule",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "semester": {
+          "name": "semester",
+          "type": "semester",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "promotionId": {
+          "name": "promotionId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "educationalYear": {
+          "name": "educationalYear",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Schedule_promotionId_Promotion_id_fk": {
+          "name": "Schedule_promotionId_Promotion_id_fk",
+          "tableFrom": "Schedule",
+          "tableTo": "Promotion",
+          "columnsFrom": [
+            "promotionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ScheduleSession": {
+      "name": "ScheduleSession",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "scheduleId": {
+          "name": "scheduleId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "startDate": {
+          "name": "startDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "finishDate": {
+          "name": "finishDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ScheduleSession_scheduleId_Schedule_id_fk": {
+          "name": "ScheduleSession_scheduleId_Schedule_id_fk",
+          "tableFrom": "ScheduleSession",
+          "tableTo": "Schedule",
+          "columnsFrom": [
+            "scheduleId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Seance": {
+      "name": "Seance",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "day": {
+          "name": "day",
+          "type": "day",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location": {
+          "name": "location",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "seance_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "module": {
+          "name": "module",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "group": {
+          "name": "group",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "teacherId": {
+          "name": "teacherId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scheduleId": {
+          "name": "scheduleId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Seance_teacherId_Teacher_id_fk": {
+          "name": "Seance_teacherId_Teacher_id_fk",
+          "tableFrom": "Seance",
+          "tableTo": "Teacher",
+          "columnsFrom": [
+            "teacherId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "Seance_scheduleId_Schedule_id_fk": {
+          "name": "Seance_scheduleId_Schedule_id_fk",
+          "tableFrom": "Seance",
+          "tableTo": "Schedule",
+          "columnsFrom": [
+            "scheduleId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.SeanceTypeCoefficient": {
+      "name": "SeanceTypeCoefficient",
+      "schema": "",
+      "columns": {
+        "seance_type": {
+          "name": "seance_type",
+          "type": "varchar(10)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "seance_type_check": {
+          "name": "seance_type_check",
+          "value": "\"SeanceTypeCoefficient\".\"seance_type\" IN ('cours', 'td', 'tp')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.Speciality": {
+      "name": "Speciality",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Teacher": {
+      "name": "Teacher",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "gradeId": {
+          "name": "gradeId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "charge": {
+          "name": "charge",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Teacher_id_User_id_fk": {
+          "name": "Teacher_id_User_id_fk",
+          "tableFrom": "Teacher",
+          "tableTo": "User",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "Teacher_gradeId_Grade_id_fk": {
+          "name": "Teacher_gradeId_Grade_id_fk",
+          "tableFrom": "Teacher",
+          "tableTo": "Grade",
+          "columnsFrom": [
+            "gradeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.User": {
+      "name": "User",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "firstName": {
+          "name": "firstName",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastName": {
+          "name": "lastName",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.HeureSup": {
+      "name": "HeureSup",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "scheduleSessionId": {
+          "name": "scheduleSessionId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "duration": {
+          "name": "duration",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "seanceId": {
+          "name": "seanceId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "teacherId": {
+          "name": "teacherId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "HeureSup_scheduleSessionId_ScheduleSession_id_fk": {
+          "name": "HeureSup_scheduleSessionId_ScheduleSession_id_fk",
+          "tableFrom": "HeureSup",
+          "tableTo": "ScheduleSession",
+          "columnsFrom": [
+            "scheduleSessionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "HeureSup_seanceId_Seance_id_fk": {
+          "name": "HeureSup_seanceId_Seance_id_fk",
+          "tableFrom": "HeureSup",
+          "tableTo": "Seance",
+          "columnsFrom": [
+            "seanceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "HeureSup_teacherId_Teacher_id_fk": {
+          "name": "HeureSup_teacherId_Teacher_id_fk",
+          "tableFrom": "HeureSup",
+          "tableTo": "Teacher",
+          "columnsFrom": [
+            "teacherId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.day": {
+      "name": "day",
+      "schema": "public",
+      "values": [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
+      ]
+    },
+    "public.role": {
+      "name": "role",
+      "schema": "public",
+      "values": [
+        "admin",
+        "teacher"
+      ]
+    },
+    "public.seance_type": {
+      "name": "seance_type",
+      "schema": "public",
+      "values": [
+        "cours",
+        "td",
+        "tp"
+      ]
+    },
+    "public.semester": {
+      "name": "semester",
+      "schema": "public",
+      "values": [
+        "S1",
+        "S2"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

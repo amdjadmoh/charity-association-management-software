@@ -1,0 +1,536 @@
+{
+  "info": {
+    "name": "Association API",
+    "description": "API endpoints for Association Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "User ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"username\": \"johndoe\",\n  \"password\": \"password123\",\n  \"phoneNumber\": \"1234567890\",\n  \"role\": \"worker\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users"]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John Updated\",\n  \"lastName\": \"Doe Updated\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "User ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "User ID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Donors",
+      "item": [
+        {
+          "name": "Get All Donors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/donors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "donors"]
+            }
+          }
+        },
+        {
+          "name": "Get Donor by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/donors/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "donors", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Donor ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Donor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"1234567890\",\n  \"nin\": \"123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/donors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "donors"]
+            }
+          }
+        },
+        {
+          "name": "Update Donor",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane Updated\",\n  \"lastName\": \"Doe Updated\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/donors/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "donors", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Donor ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Donor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/donors/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "donors", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Donor ID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Diseases",
+      "item": [
+        {
+          "name": "Get All Diseases",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/diseases",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "diseases"]
+            }
+          }
+        },
+        {
+          "name": "Get Disease by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/diseases/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "diseases", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Disease ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Disease",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Disease Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/diseases",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "diseases"]
+            }
+          }
+        },
+        {
+          "name": "Update Disease",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Disease Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/diseases/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "diseases", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Disease ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Disease",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/diseases/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "diseases", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Disease ID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cities",
+      "item": [
+        {
+          "name": "Get All Cities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/cities",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "cities"]
+            }
+          }
+        },
+        {
+          "name": "Get City by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/cities/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "cities", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "City ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create City",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"City Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/cities",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "cities"]
+            }
+          }
+        },
+        {
+          "name": "Update City",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated City Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/cities/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "cities", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "City ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete City",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/cities/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "cities", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "City ID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Patients",
+      "item": [
+        {
+          "name": "Get All Patients",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/patients",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "patients"]
+            }
+          }
+        },
+        {
+          "name": "Get Patient by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/patients/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "patients", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Patient ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Patient\",\n  \"lastName\": \"Name\",\n  \"dateOfBirth\": \"1990-01-01\",\n  \"phoneNumber\": \"1234567890\",\n  \"address\": \"123 Street Name\",\n  \"disease\": 1,\n  \"civilStatus\": \"single\",\n  \"city\": 1,\n  \"nin\": \"123456789\",\n  \"fatherName\": \"Father Name\",\n  \"numberofChildren\": 0,\n  \"isActive\": true,\n  \"isDeceased\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/patients",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "patients"]
+            }
+          }
+        },
+        {
+          "name": "Update Patient",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Updated Patient\",\n  \"lastName\": \"Updated Name\",\n  \"address\": \"456 New Street\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/patients/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "patients", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Patient ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Patient",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/patients/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "patients", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Patient ID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ]
+}
