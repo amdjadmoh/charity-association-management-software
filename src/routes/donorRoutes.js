@@ -8,10 +8,24 @@ router
   .get(donorController.getAllDonors)
   .post(donorController.createDonor);
 
+  router
+  .route('/donations')
+  .get(donorController.getAllDonations)
+  .post(donorController.createDonation);
+  router.route('/notUsedDonations')
+  .get(donorController.getNotUsedDonations);
+  router
+  .route('/donations/:id')
+  .get(donorController.getDonation)
+  .put(donorController.updateDonation)
+  .delete(donorController.deleteDonation);
 router
   .route('/:id')
   .get(donorController.getDonor)
   .patch(donorController.updateDonor)
   .delete(donorController.deleteDonor);
+router
+  .route('/getDonorDonations/:id')
+  .get(donorController.getDonorDonations)
 
 module.exports = router;
