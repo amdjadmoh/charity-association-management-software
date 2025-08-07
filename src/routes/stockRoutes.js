@@ -15,14 +15,7 @@ router
   .patch(stockController.updateStock)
   .delete(stockController.deleteStock);
 
-// Stock distribution routes
-router
-  .route('/:id/distribute')
-  .post(stockController.distributeStock);
 
-router.get('/distribution/all', stockController.getStockDistribution);
 
-// Additional utility routes
-router.get('/low/all', stockController.getLowStock);
 
 module.exports = router;

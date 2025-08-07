@@ -1,5 +1,5 @@
 import { integer, pgTable, varchar, pgEnum, serial, time, boolean, date, doublePrecision, check,} from "drizzle-orm/pg-core";
-import { sql,eq,gte } from "drizzle-orm";
+import { sql,eq,gte, desc } from "drizzle-orm";
 import e from "express";
 
 // Define the enum types
@@ -12,7 +12,7 @@ export const User = pgTable("User", {
   lastName: varchar( { length: 256 }).notNull(),
   username: varchar( { length: 256 }).notNull().unique(),
   password: varchar( { length: 256 }).notNull(),
-  phoneNumber: varchar( { length: 15 }).notNull(),
+  phoneNumber: varchar( { length: 15 }),
   role: RoleEnums().notNull(), 
 });
 
@@ -40,33 +40,42 @@ export const patient = pgTable("patient", {
   firstName: varchar( { length: 256 }).notNull(),
   lastName: varchar( { length: 256 }).notNull(),
   dateOfBirth: date().notNull(),
-  phoneNumber: varchar( { length: 15 }).notNull(),
-  address: varchar( { length: 512 }).notNull(),
+  phoneNumber: varchar( { length: 15 }),
+  address: varchar( { length: 512 }),
   disease: integer("disease_id")
     .references(() => disease.id, { onDelete: "cascade" }),
   createdAt: time().defaultNow(),
   updatedAt: time().defaultNow(),
-  civilStatus: varchar( { length: 50 }).notNull(),
+  civilStatus: varchar( { length: 50 }),
   city : integer("city_id")
     .notNull()
     .references(() => city.id, { onDelete: "cascade" }),
-  nin: varchar( { length: 20 }).notNull().unique(),
-  fatherName: varchar( { length: 256 }).notNull(),
+  nin: varchar( { length: 20 }).unique(),
+  fatherName: varchar( { length: 256 }),
   numberofChildren: integer().notNull().default(0),
   isActive: boolean().notNull().default(true),
   isDeceased: boolean().notNull().default(false),
   deceasedDate: date()
 });
 
-export const stock= pgTable("stock", {
+export const products= pgTable("product",{
   id: serial().primaryKey(),
-  name: varchar( { length: 256 }).notNull(),
-  type:varchar( { length: 256 }).notNull(),
-  unitPrice: doublePrecision(),
+  productName: varchar( { length: 256 }).notNull(),
+  description: varchar( { length: 512 }),
+  type: varchar( { length: 256 }).notNull(),
+  quantity: integer().notNull().default(0),
+})
+
+
+export const stock = pgTable("stock", {
+  id: serial().primaryKey(),
+  productId: integer("product_id")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
   quantity: integer().notNull(),
   createdAt: time().defaultNow(),
   updatedAt: time().defaultNow(),
-  expiryDate: date().notNull(),
+  unitPrice: doublePrecision().notNull(),
   deleteDate: date().$default(null),
 });
 
@@ -78,8 +87,7 @@ export const Donation = pgTable("donation", {
     .notNull()
     .references(() => Donor.id, { onDelete: "cascade" }),
   amount: doublePrecision().notNull(),
-  createdAt: time().defaultNow(),
-  updatedAt: time().defaultNow(),
+  date: date().notNull(),
   type: DonationType().notNull(),
   usedAmount: doublePrecision().notNull().default(0),
 },(table)=>[
@@ -88,18 +96,8 @@ export const Donation = pgTable("donation", {
 );
 
 
-export const stockDistribution = pgTable("stock_distribution", {
-  id: serial().primaryKey(),
-  stockId: integer("stock_id")
-    .notNull()
-    .references(() => stock.id, { onDelete: "cascade" }),
-  patientId: integer("patient_id")
-    .notNull()
-    .references(() => patient.id, { onDelete: "cascade" }),
-  quantity: integer().notNull(),
-  createdAt: time().defaultNow(),
-  updatedAt: time().defaultNow(),
-});
+
+
 
 
 

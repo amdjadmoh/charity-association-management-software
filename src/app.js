@@ -11,6 +11,7 @@ const donorRoutes = require('./routes/donorRoutes');
 const diseaseRoutes = require('./routes/diseaseRoutes');
 const cityRoutes = require('./routes/cityRoutes');
 const patientRoutes = require('./routes/patientRoutes');
+const productRoutes = require('./routes/productRoutes');
 const stockRoutes = require('./routes/stockRoutes');
 
 const app = express();
@@ -28,6 +29,7 @@ app.use('/api/v1/donors', donorRoutes);
 app.use('/api/v1/diseases', diseaseRoutes);
 app.use('/api/v1/cities', cityRoutes);
 app.use('/api/v1/patients', patientRoutes);
+app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/stock', stockRoutes);
 
 // Handle undefined routes

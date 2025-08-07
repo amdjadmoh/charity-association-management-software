@@ -1,4 +1,4 @@
-const { stock, stockDistribution, patient,Donation } = require('../db/schema');
+const { stock, stockDistribution, patient,Donation,products } = require('../db/schema');
 const { db } = require('../db');
 const { eq, lt, and, sql, } = require('drizzle-orm');
 const AppError = require('../utils/appError');
@@ -45,6 +45,13 @@ exports.createStock = catchAsync(async (req, res, next) => {
   if (req.body.unitPrice && req.body.unitPrice < 0) {
     return next(new AppError('Unit price cannot be negative', 400));
   }
+  const product= await db.select()
+    .from(products)
+    .where(eq(products.id, req.body.productId))
+    .limit(1);
+  if (!product.length) {
+    return next(new AppError('No product found with that ID', 404));
+  }
 
   // calculate price 
   const totalPrice = req.body.unitPrice * req.body.quantity;
@@ -73,7 +80,12 @@ exports.createStock = catchAsync(async (req, res, next) => {
     ...req.body,
     deleteDate: null
   }).returning();
-  
+
+  // update product
+  await db.update(products)
+    .set({ quantity: product[0].quantity + req.body.quantity })
+    .where(eq(products.id, req.body.productId));
+
   res.status(201).json({
     status: 'success',
     data: { stock: newStock[0] }
@@ -90,6 +102,16 @@ exports.updateStock = catchAsync(async (req, res, next) => {
   if (req.body.unitPrice !== undefined && req.body.unitPrice < 0) {
     return next(new AppError('Unit price cannot be negative', 400));
   }
+  const oldStock = await db.select()
+    .from(stock)
+    .where(eq(stock.id, req.params.id))
+    .limit(1);
+  if (!oldStock.length) {
+    return next(new AppError('No stock item found with that ID', 404));
+  }
+
+  const oldQuantity = oldStock[0].quantity;
+// get donations 
 
   const updatedStock = await db.update(stock)
     .set({
@@ -105,6 +127,10 @@ exports.updateStock = catchAsync(async (req, res, next) => {
   if (!updatedStock.length) {
     return next(new AppError('No stock item found with that ID', 404));
   }
+  // update product
+  await db.update(products)
+    .set({ quantity: product[0].quantity + (req.body.quantity - oldQuantity) })
+    .where(eq(products.id, req.body.productId));
 
   res.status(200).json({
     status: 'success',
@@ -129,109 +155,16 @@ exports.deleteStock = catchAsync(async (req, res, next) => {
     return next(new AppError('No stock item found with that ID', 404));
   }
 
+  // update product
+  await db.update(products)
+    .set({ quantity: product[0].quantity + (0 - oldQuantity) })
+    .where(eq(products.id, req.body.productId));
+
   res.status(204).json({
     status: 'success',
     data: null
   });
 });
 
-// Stock Distribution Controllers
-exports.distributeStock = catchAsync(async (req, res, next) => {
-  const { patientId, quantity } = req.body;
-  const stockId = req.params.id;
 
-  // Check if stock exists and is not deleted
-  const stockItem = await db.select()
-    .from(stock)
-    .where(and(
-      eq(stock.id, stockId),
-      eq(stock.deleteDate, null)
-    ))
-    .limit(1);
 
-  if (!stockItem.length) {
-    return next(new AppError('No stock item found with that ID', 404));
-  }
-
-  // Check if patient exists and is active
-  const patientExists = await db.select()
-    .from(patient)
-    .where(and(
-      eq(patient.id, patientId),
-      eq(patient.isActive, true),
-      eq(patient.isDeceased, false)
-    ))
-    .limit(1);
-
-  if (!patientExists.length) {
-    return next(new AppError('Patient not found or is not active', 404));
-  }
-
-  // Check if quantity is available
-  if (quantity > stockItem[0].quantity) {
-    return next(new AppError('Insufficient stock quantity', 400));
-  }
-
-  // Create stock distribution
-  await db.transaction(async (tx) => {
-    // Create distribution record
-    await tx.insert(stockDistribution).values({
-      stockId,
-      patientId,
-      quantity
-    });
-
-    // Update stock quantity
-    await tx.update(stock)
-      .set({ 
-        quantity: stockItem[0].quantity - quantity,
-        updatedAt: new Date()
-      })
-      .where(eq(stock.id, stockId));
-  });
-
-  res.status(201).json({
-    status: 'success',
-    message: 'Stock distributed successfully'
-  });
-});
-
-exports.getStockDistribution = catchAsync(async (req, res) => {
-  const distributions = await db.select({
-    id: stockDistribution.id,
-    quantity: stockDistribution.quantity,
-    createdAt: stockDistribution.createdAt,
-    stockName: stock.name,
-    stockType: stock.type,
-    patientFirstName: patient.firstName,
-    patientLastName: patient.lastName,
-    patientNin: patient.nin
-  })
-  .from(stockDistribution)
-  .leftJoin(stock, eq(stockDistribution.stockId, stock.id))
-  .leftJoin(patient, eq(stockDistribution.patientId, patient.id));
-
-  res.status(200).json({
-    status: 'success',
-    results: distributions.length,
-    data: { distributions }
-  });
-});
-
-// Get low stock items
-exports.getLowStock = catchAsync(async (req, res) => {
-  const threshold = parseInt(req.query.threshold) || 10;
-  
-  const lowStocks = await db.select()
-    .from(stock)
-    .where(and(
-      lt(stock.quantity, threshold),
-      eq(stock.deleteDate, null)
-    ));
-
-  res.status(200).json({
-    status: 'success',
-    results: lowStocks.length,
-    data: { stocks: lowStocks }
-  });
-});
