@@ -1,4 +1,4 @@
-const { Donor, Donation} = require('../db/schema');
+const { Donor, Donation,DonationStock} = require('../db/schema');
 const { db } = require('../db');
 const { eq,gt } = require('drizzle-orm');
 const AppError = require('../utils/appError');

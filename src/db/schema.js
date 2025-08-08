@@ -48,14 +48,13 @@ export const patient = pgTable("patient", {
   updatedAt: time().defaultNow(),
   civilStatus: varchar( { length: 50 }),
   city : integer("city_id")
-    .notNull()
     .references(() => city.id, { onDelete: "cascade" }),
   nin: varchar( { length: 20 }).unique(),
   fatherName: varchar( { length: 256 }),
   numberofChildren: integer().notNull().default(0),
-  isActive: boolean().notNull().default(true),
-  isDeceased: boolean().notNull().default(false),
-  deceasedDate: date()
+  celiac:boolean().notNull(),
+  rehabilitation:boolean().notNull(),
+  sick:boolean().notNull(),
 });
 
 export const products= pgTable("product",{
@@ -76,7 +75,6 @@ export const stock = pgTable("stock", {
   createdAt: time().defaultNow(),
   updatedAt: time().defaultNow(),
   unitPrice: doublePrecision().notNull(),
-  deleteDate: date().$default(null),
 });
 
 export const DonationType=pgEnum("donation_type",["zakat","sadaqa","other"]);
@@ -95,10 +93,16 @@ export const Donation = pgTable("donation", {
 ]
 );
 
-
-
-
-
+export const DonationStock = pgTable("donation_stock", {
+  id: serial().primaryKey(),
+  donationId: integer("donation_id")
+    .notNull()
+    .references(() => Donation.id, { onDelete: "cascade" }),
+  stockId: integer("stock_id")
+    .notNull()
+    .references(() => stock.id, { onDelete: "cascade" }),
+  amount: integer().notNull(),
+});
 
 
   

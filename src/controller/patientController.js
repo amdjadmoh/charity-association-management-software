@@ -47,6 +47,7 @@ exports.getPatient = catchAsync(async (req, res, next) => {
 
 exports.createPatient = catchAsync(async (req, res, next) => {
   // Validate disease exists
+  if(req.body.disease){
   const diseaseExists = await db
     .select()
     .from(disease)
@@ -56,8 +57,9 @@ exports.createPatient = catchAsync(async (req, res, next) => {
   if (!diseaseExists.length) {
     return next(new AppError('Disease not found', 404));
   }
-
+  }
   // Validate city exists
+  if (req.body.city) {
   const cityExists = await db
     .select()
     .from(city)
@@ -66,6 +68,7 @@ exports.createPatient = catchAsync(async (req, res, next) => {
 
   if (!cityExists.length) {
     return next(new AppError('City not found', 404));
+  }
   }
 
   const newPatient = await db.insert(patient).values(req.body).returning();
