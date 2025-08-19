@@ -112,6 +112,9 @@ exports.updateDonation = catchAsync(async (req, res, next) => {
   if (!existingDonor.length) {
     return next(new AppError('Donor not found', 404));
   }
+  if (req.body.usedAmount){
+    return next(new AppError('Cannot update usedAmount directly', 400));
+  }
   const updatedDonation= await db.update(Donation)
   .set(donationData)
   .where(eq(Donation.id,req.params.id))
