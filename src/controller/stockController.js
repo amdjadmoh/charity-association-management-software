@@ -35,7 +35,7 @@ exports.getStock = catchAsync(async (req, res, next) => {
 });
 
 exports.createStock = catchAsync(async (req, res, next) => {
-  const { quantity, unitPrice, productId, donations } = req.body;
+  const { quantity, unitPrice, productId, donations,date } = req.body;
 
   // Input validation
   if (!Array.isArray(donations)) {
@@ -94,7 +94,8 @@ exports.createStock = catchAsync(async (req, res, next) => {
     const newStock = await tx.insert(stock).values({
       productId,
       quantity,
-      unitPrice
+      unitPrice,
+      date
     }).returning();
 
     // Process donations

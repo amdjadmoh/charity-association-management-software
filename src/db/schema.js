@@ -54,6 +54,7 @@ export const patient = pgTable("patient", {
   numberofChildren: integer().notNull().default(0),
   celiac:boolean().notNull(),
   rehabilitation:boolean().notNull(),
+  isDisabled:boolean().notNull(),
   sick:boolean().notNull(),
 });
 
@@ -72,8 +73,7 @@ export const stock = pgTable("stock", {
     .notNull()
     .references(() => products.id, { onDelete: "cascade" }),
   quantity: integer().notNull(),
-  createdAt: time().defaultNow(),
-  updatedAt: time().defaultNow(),
+  date: date().notNull(),
   unitPrice: doublePrecision().notNull(),
 });
 
@@ -104,11 +104,23 @@ export const DonationStock = pgTable("donation_stock", {
   amount: integer().notNull(),
 });
 
+export const clinic = pgTable("clinic", {
+  id: serial().primaryKey(),
+  name: varchar( { length: 256 }).notNull(),
+  address: varchar( { length: 512 }),
+  phoneNumber: varchar( { length: 15 }),
+  phoneNumber2: varchar( { length: 15 }),
+  phoneNumber3: varchar( { length: 15 }),
+  email: varchar( { length: 256 }),
+});
 
-  
-
-
-
-
-
+export const distributors = pgTable("distributors", {
+  id: serial().primaryKey(),
+  name: varchar( { length: 256 }).notNull(),
+  address: varchar( { length: 512 }),
+  phoneNumber: varchar( { length: 15 }),
+  phoneNumber2: varchar( { length: 15 }),
+  phoneNumber3: varchar( { length: 15 }),
+  email: varchar( { length: 256 }),
+});
 

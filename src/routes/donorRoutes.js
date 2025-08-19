@@ -17,7 +17,7 @@ router
   router
   .route('/donations/:id')
   .get(donorController.getDonation)
-  .put(donorController.updateDonation)
+  .patch(donorController.updateDonation)
   .delete(donorController.deleteDonation);
 router
   .route('/:id')
