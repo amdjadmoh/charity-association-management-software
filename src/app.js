@@ -13,8 +13,9 @@ const cityRoutes = require('./routes/cityRoutes');
 const patientRoutes = require('./routes/patientRoutes');
 const productRoutes = require('./routes/productRoutes');
 const stockRoutes = require('./routes/stockRoutes');
-const clinicRoutes = require('./routes/clinicRoutes');
 const distributorRoutes = require('./routes/distributorRoutes');
+const partnerRoutes = require('./routes/partnerRoutes');
+const receiptRoutes = require('./routes/receiptRoutes');
 
 const app = express();
 
@@ -33,8 +34,9 @@ app.use('/api/v1/cities', cityRoutes);
 app.use('/api/v1/patients', patientRoutes);
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/stock', stockRoutes);
-app.use('/api/v1/clinics', clinicRoutes);
 app.use('/api/v1/distributors', distributorRoutes);
+app.use('/api/v1/partners', partnerRoutes);
+app.use('/api/v1/receipts', receiptRoutes);
 
 // Handle undefined routes
 app.use((req, res, next) => {

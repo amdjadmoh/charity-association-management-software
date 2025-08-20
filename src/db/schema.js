@@ -1,5 +1,5 @@
 import { integer, pgTable, varchar, pgEnum, serial, time, boolean, date, doublePrecision, check,} from "drizzle-orm/pg-core";
-import { sql,eq,gte, desc } from "drizzle-orm";
+import { sql,eq,gte, desc, is } from "drizzle-orm";
 import e from "express";
 
 // Define the enum types
@@ -56,6 +56,10 @@ export const patient = pgTable("patient", {
   rehabilitation:boolean().notNull(),
   isDisabled:boolean().notNull(),
   sick:boolean().notNull(),
+  celiacID: varchar( { length: 20 }).unique(),
+  rehabilitationID: varchar( { length: 20 }).unique(),
+  disabledID: varchar( { length: 20 }).unique(),
+  sickID: varchar( { length: 20 }).unique()
 });
 
 export const products= pgTable("product",{
@@ -104,15 +108,7 @@ export const DonationStock = pgTable("donation_stock", {
   amount: integer().notNull(),
 });
 
-export const clinic = pgTable("clinic", {
-  id: serial().primaryKey(),
-  name: varchar( { length: 256 }).notNull(),
-  address: varchar( { length: 512 }),
-  phoneNumber: varchar( { length: 15 }),
-  phoneNumber2: varchar( { length: 15 }),
-  phoneNumber3: varchar( { length: 15 }),
-  email: varchar( { length: 256 }),
-});
+
 
 export const distributors = pgTable("distributors", {
   id: serial().primaryKey(),
@@ -124,3 +120,29 @@ export const distributors = pgTable("distributors", {
   email: varchar( { length: 256 }),
 });
 
+export const receipt = pgTable("receipt", {
+  id: serial().primaryKey(),
+  receiptId: varchar( { length: 20 }).notNull().unique(),
+  patientId: integer("patient_id")
+    .notNull()
+    .references(() => patient.id, { onDelete: "cascade" }),
+  type: varchar( { length: 50 }).notNull(),
+  amount: doublePrecision(),
+  amountCovered: doublePrecision(),
+  amountByPatient: doublePrecision(),
+  paidBy: varchar( { length: 256 }),
+  partnerId: integer("partner_id")
+    .references(() => partner.id, { onDelete: "cascade" }),
+});
+
+export const partner = pgTable("partner", {
+  id: serial().primaryKey(),
+  type:varchar( { length: 512 }).notNull(),
+  name: varchar( { length: 512 }).notNull(),
+  address: varchar( { length: 512 }),
+  phoneNumber: varchar( { length: 15 }),
+  phoneNumber2: varchar( { length: 15 }),
+  phoneNumber3: varchar( { length: 15 }),
+  email: varchar( { length: 256 }),
+  isActive: boolean().notNull().default(true),
+});
