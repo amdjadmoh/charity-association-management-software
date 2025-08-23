@@ -65,3 +65,27 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
     data: null
   });
 });
+
+exports.login= catchAsync(async (req, res, next) => {
+  const {username, password} = req.body;
+  if(!username || !password){
+    return 
+    next(new AppError('Please provide username and password', 400));
+  }
+
+  const user = await db.select().from(User).where(eq(User.username, username)).limit(1);
+  if (!user.length) {
+    return next(new AppError('No user found with that username', 404));
+  }
+
+  if (user[0].password !== password) {
+    return next(new AppError('Incorrect password', 401));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: { user: user[0] }
+  });
+}
+
+)

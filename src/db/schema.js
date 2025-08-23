@@ -146,3 +146,51 @@ export const partner = pgTable("partner", {
   email: varchar( { length: 256 }),
   isActive: boolean().notNull().default(true),
 });
+
+export const materialTypes = pgTable("material_types", {
+  id: serial().primaryKey(),
+  name: varchar( { length: 256 }).notNull(),
+});
+
+export const statusEnum = pgEnum("status", ["available", "unavailable","lost"]);
+export const material = pgTable("material", {
+  id: serial().primaryKey(),
+  inventory_number: varchar( { length: 50 }).notNull(),
+  typeId: integer("type_id")
+    .notNull()
+    .references(() => materialTypes.id, { onDelete: "cascade" }),
+  registration_date: date().notNull(),
+  price: doublePrecision().notNull(),
+  notes: varchar( { length: 512 }),
+  status: statusEnum().notNull().default("available"),
+});
+
+
+export const materialDonations = pgTable("material_donations", {
+  id: serial().primaryKey(),
+  materialId: integer("material_id")
+    .notNull()
+    .references(() => material.id, { onDelete: "cascade" }),
+  donationId: integer("donation_id")
+    .notNull()
+    .references(() => Donation.id, { onDelete: "cascade" }),
+  amount: doublePrecision().notNull(),
+  
+});
+export const loanStatusEnum = pgEnum("loan_status", ["active", "returned"]);
+
+export const materialLoans = pgTable("material_loans", {
+  id: serial().primaryKey(),
+  materialId: integer("material_id")
+    .notNull()
+    .references(() => material.id, { onDelete: "cascade" }),
+  patientId: integer("patient_id")
+    .notNull()
+    .references(() => patient.id, { onDelete: "cascade" }),
+  loanDate: date().notNull(),
+  returnDate: date().notNull(),
+  lenderId: integer("lender_id")
+    .notNull()
+    .references(() => User.id, { onDelete: "cascade" }),
+  status: loanStatusEnum().notNull().default("active"),
+});

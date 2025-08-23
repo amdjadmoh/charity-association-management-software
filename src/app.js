@@ -16,6 +16,9 @@ const stockRoutes = require('./routes/stockRoutes');
 const distributorRoutes = require('./routes/distributorRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const receiptRoutes = require('./routes/receiptRoutes');
+const materialTypeRoutes = require('./routes/materialTypeRoutes');
+const materialRoutes = require('./routes/materialRoutes');
+const materialLoanRoutes = require('./routes/materialLoanRoutes');
 
 const app = express();
 
@@ -37,6 +40,9 @@ app.use('/api/v1/stock', stockRoutes);
 app.use('/api/v1/distributors', distributorRoutes);
 app.use('/api/v1/partners', partnerRoutes);
 app.use('/api/v1/receipts', receiptRoutes);
+app.use('/api/v1/material-types', materialTypeRoutes);
+app.use('/api/materials', materialRoutes);
+app.use('/api/material-loans', materialLoanRoutes);
 
 // Handle undefined routes
 app.use((req, res, next) => {
