@@ -130,9 +130,20 @@ export const receipt = pgTable("receipt", {
   amount: doublePrecision(),
   amountCovered: doublePrecision(),
   amountByPatient: doublePrecision(),
+  paid: boolean().notNull().default(false),
   paidBy: varchar( { length: 256 }),
   partnerId: integer("partner_id")
     .references(() => partner.id, { onDelete: "cascade" }),
+});
+export const receiptDonations = pgTable("receipt_donations", {
+  id: serial().primaryKey(),
+  receiptId: integer("receipt_id")
+    .notNull()
+    .references(() => receipt.id, { onDelete: "cascade" }),
+  donationId: integer("donation_id")
+    .notNull()
+    .references(() => Donation.id, { onDelete: "cascade" }),
+  amount: doublePrecision().notNull(),
 });
 
 export const partner = pgTable("partner", {

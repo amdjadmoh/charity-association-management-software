@@ -8,6 +8,9 @@ router
   .route('/')
   .get(receiptController.getAllReceipts)
   .post(receiptController.createReceipt);
+router
+  .route('/pay/:id')
+  .post(receiptController.payReceipt);
 
 router
   .route('/:id')
