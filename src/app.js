@@ -23,9 +23,11 @@ const materialLoanRoutes = require('./routes/materialLoanRoutes');
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173', // frontend URL
-  credentials: true, // allow credentials
+  origin: '*', // Allow all origins
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allow specific HTTP methods
+  allowedHeaders: 'Content-Type, Authorization' // Allow specific headers
 }));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
