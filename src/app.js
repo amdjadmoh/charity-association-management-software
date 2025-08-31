@@ -19,6 +19,7 @@ const receiptRoutes = require('./routes/receiptRoutes');
 const materialTypeRoutes = require('./routes/materialTypeRoutes');
 const materialRoutes = require('./routes/materialRoutes');
 const materialLoanRoutes = require('./routes/materialLoanRoutes');
+const sackRoutes= require('./routes/sackRoutes');
 
 const app = express();
 
@@ -45,6 +46,8 @@ app.use('/api/v1/receipts', receiptRoutes);
 app.use('/api/v1/material-types', materialTypeRoutes);
 app.use('/api/materials', materialRoutes);
 app.use('/api/material-loans', materialLoanRoutes);
+app.use('/api/v1/sacks', sackRoutes);
+
 
 // Handle undefined routes
 app.use((req, res, next) => {

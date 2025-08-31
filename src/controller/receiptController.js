@@ -3,6 +3,7 @@ const { db } = require("../db");
 const { eq, desc, sql } = require("drizzle-orm");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+const { getPatient } = require("./patientController");
 
 exports.getAllReceipts = catchAsync(async (req, res) => {
   const receipts = await db
@@ -289,5 +290,32 @@ exports.payReceipt = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: { receipt: result }
+  });
+});
+
+exports.getPatientReceipts = catchAsync(async (req, res, next) => {
+  const { patientId } = req.params;
+
+  // Check if patient exists
+  const patientExists = await db
+    .select()
+    .from(patient)
+    .where(eq(patient.id, patientId))
+    .limit(1);
+
+  if (!patientExists.length) {
+    return next(new AppError("No patient found with that ID", 404));
+  }
+
+  // Get receipts for the patient
+  const receipts = await db
+    .select()
+    .from(receipt)
+    .where(eq(receipt.patientId, patientId));
+
+  res.status(200).json({
+    status: "success",
+    results: receipts.length,
+    data: { receipts }
   });
 });

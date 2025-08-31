@@ -1,4 +1,4 @@
-import { integer, pgTable, varchar, pgEnum, serial, time, boolean, date, doublePrecision, check,} from "drizzle-orm/pg-core";
+import { integer, pgTable, varchar, pgEnum, serial, time, boolean, date, doublePrecision, check, jsonb} from "drizzle-orm/pg-core";
 import { sql,eq,gte, desc, is } from "drizzle-orm";
 import e from "express";
 
@@ -204,4 +204,43 @@ export const materialLoans = pgTable("material_loans", {
     .notNull()
     .references(() => User.id, { onDelete: "cascade" }),
   status: loanStatusEnum().notNull().default("active"),
+});
+
+export const sack = pgTable("sack", {
+  id: serial().primaryKey(),
+  name: varchar({ length: 256 }).notNull(),
+});
+
+export const sackProducts = pgTable("sack_products", {
+  id: serial().primaryKey(),
+  sackId: integer("sack_id")
+    .notNull()
+    .references(() => sack.id, { onDelete: "cascade" }),
+  productId: integer("product_id")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
+  quantity: integer().notNull(),
+});
+export const sackPatients = pgTable("sack_patients", {
+  id: serial().primaryKey(),
+  sackId: integer("sack_id")
+    .notNull()
+    .references(() => sack.id, { onDelete: "cascade" }),
+  patientId: integer("patient_id")
+    .notNull()
+    .references(() => patient.id, { onDelete: "cascade" }),
+  quantity: integer().notNull(),
+  distributionDate: date().notNull(),
+  distributedBy: integer("distributed_by")
+    .notNull()
+    .references(() => User.id, { onDelete: "cascade" }),
+  productsSnapshot: jsonb(), // Stores the product array directly
+});
+
+export const sackDistributionSnapshot = pgTable("sack_distribution_snapshot", {
+  id: serial().primaryKey(),
+  distributionId: integer().references(() => sackPatients.id),
+  productId: integer().references(() => products.id),
+  productName: varchar({ length: 256 }),
+  quantity: integer(),
 });

@@ -11,7 +11,9 @@ router
 router
   .route('/pay/:id')
   .post(receiptController.payReceipt);
-
+router
+  .route('/patient/:patientId')
+  .get(receiptController.getPatientReceipts);
 router
   .route('/:id')
   .get(receiptController.getReceipt)

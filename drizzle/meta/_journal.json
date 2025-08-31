@@ -15,6 +15,20 @@
       "when": 1744995846058,
       "tag": "0001_mysterious_justice",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745001846058,
+      "tag": "0002_sack_versioning",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1745301846058,
+      "tag": "0003_snapshot_schema",
+      "breakpoints": true
     }
   ]
 }
