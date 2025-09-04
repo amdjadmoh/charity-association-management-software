@@ -1,10 +1,11 @@
-const { patient, disease, city } = require("../db/schema");
+const { patient, disease, city, sackPatients} = require("../db/schema");
 const { db } = require("../db");
 const { eq ,desc,sql} = require("drizzle-orm");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
 exports.getAllPatients = catchAsync(async (req, res) => {
+  // First, get all patients with their basic information
   const patients = await db
     .select({
       ...patient,
@@ -14,14 +15,36 @@ exports.getAllPatients = catchAsync(async (req, res) => {
     .from(patient)
     .leftJoin(disease, eq(patient.disease, disease.id))
     .leftJoin(city, eq(patient.city, city.id));
-
+  
+  // For each patient, fetch their last distribution date
+  const enhancedPatients = await Promise.all(
+    patients.map(async (pat) => {
+      // Get the most recent distribution for this patient
+      const lastDistribution = await db
+        .select({
+          distributionDate: sackPatients.distributionDate,
+          sackId: sackPatients.sackId
+        })
+        .from(sackPatients)
+        .where(eq(sackPatients.patientId, pat.id))
+        .orderBy(desc(sackPatients.distributionDate))
+        .limit(1);
+      
+      // Add the last distribution date to the patient object
+      return {
+        ...pat,
+        lastDistributionDate: lastDistribution.length ? lastDistribution[0].distributionDate : null,
+        lastSackId: lastDistribution.length ? lastDistribution[0].sackId : null
+      };
+    })
+  );
+  
   res.status(200).json({
     status: "success",
-    results: patients.length,
-    data: { patients },
+    results: enhancedPatients.length,
+    data: { patients: enhancedPatients },
   });
 });
-
 exports.getPatient = catchAsync(async (req, res, next) => {
   const patientData = await db
     .select({
@@ -229,14 +252,13 @@ exports.updatePatient = catchAsync(async (req, res, next) => {
 
 exports.deletePatient = catchAsync(async (req, res, next) => {
   const deletedPatient = await db
-    .delete(patient)
+    .update(patient)
+    .set({ active: false })
     .where(eq(patient.id, req.params.id))
     .returning();
-
   if (!deletedPatient.length) {
     return next(new AppError("No patient found with that ID", 404));
   }
-
   res.status(204).json({
     status: "success",
     data: null,

@@ -1,6 +1,6 @@
 import { integer, pgTable, varchar, pgEnum, serial, time, boolean, date, doublePrecision, check, jsonb} from "drizzle-orm/pg-core";
 import { sql,eq,gte, desc, is } from "drizzle-orm";
-import e from "express";
+
 
 // Define the enum types
 export const RoleEnums = pgEnum("role", ["admin","worker"]);
@@ -59,7 +59,9 @@ export const patient = pgTable("patient", {
   celiacID: varchar( { length: 20 }).unique(),
   rehabilitationID: varchar( { length: 20 }).unique(),
   disabledID: varchar( { length: 20 }).unique(),
-  sickID: varchar( { length: 20 }).unique()
+  sickID: varchar( { length: 20 }).unique(),
+  coucheType: varchar( { length: 50 }),
+  active: boolean().notNull().default(true),
 });
 
 export const products= pgTable("product",{
@@ -233,7 +235,7 @@ export const sackPatients = pgTable("sack_patients", {
   distributionDate: date().notNull(),
   distributedBy: integer("distributed_by")
     .notNull()
-    .references(() => User.id, { onDelete: "cascade" }),
+    .references(() => distributors.id, { onDelete: "cascade" }),
   productsSnapshot: jsonb(), // Stores the product array directly
 });
 
