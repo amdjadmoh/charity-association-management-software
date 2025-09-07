@@ -83,7 +83,7 @@ exports.getDonorDonations = catchAsync(async (req, res, next) => {
 );
 
 exports.createDonation = catchAsync(async (req, res, next) => {
-  const { donorId, ...donationData } = req.body;
+  const { donorId, date, ...donationData } = req.body;
 
   // Validate donor exists
   const donorExists = await db
@@ -96,38 +96,53 @@ exports.createDonation = catchAsync(async (req, res, next) => {
     return next(new AppError('Donor not found', 404));
   }
 
-  const newDonation = await db.insert(Donation).values({ ...donationData, donorId }).returning();
+  // Convert string date to Date object if provided
+  const donationValues = { ...donationData, donorId };
+  if (date) {
+    donationValues.date = new Date(date);
+  }
+
+  const newDonation = await db.insert(Donation).values(donationValues).returning();
 
   res.status(201).json({
     status: 'success',
     data: { donation: newDonation[0] }
   });
-}
-);
+});
 
 exports.updateDonation = catchAsync(async (req, res, next) => {
- const {donorId, ...donationData} = req.body;
- // check if donor exists
- const existingDonor = await db.select().from(Donor).where(eq(Donor.id, donorId)).limit(1);
+  const { donorId, date, ...donationData } = req.body;
+  
+  // check if donor exists
+  const existingDonor = await db.select().from(Donor).where(eq(Donor.id, donorId)).limit(1);
   if (!existingDonor.length) {
     return next(new AppError('Donor not found', 404));
   }
-  if (req.body.usedAmount){
+  
+  if (req.body.usedAmount) {
     return next(new AppError('Cannot update usedAmount directly', 400));
   }
-  const updatedDonation= await db.update(Donation)
-  .set(donationData)
-  .where(eq(Donation.id,req.params.id))
-  .returning();
+  
+  // Convert string date to Date object if provided
+  const updateValues = { ...donationData };
+  if (date) {
+    updateValues.date = new Date(date);
+  }
+  
+  const updatedDonation = await db.update(Donation)
+    .set(updateValues)
+    .where(eq(Donation.id, req.params.id))
+    .returning();
+    
   if (!updatedDonation.length) {
     return next(new AppError('No donation found with that ID', 404));
   }
+  
   res.status(200).json({
     status: 'success',
     data: { donation: updatedDonation[0] }
   });
 });
-
 exports.deleteDonation = catchAsync(async (req, res, next) => {
   const deletedDonation = await db.delete(Donation)
     .where(eq(Donation.id, req.params.id))
