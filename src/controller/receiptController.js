@@ -47,7 +47,7 @@ exports.getReceipt = catchAsync(async (req, res, next) => {
 });
 
 exports.createReceipt = catchAsync(async (req, res, next) => {
-  const { patientId, type, amount, amountCovered, amountByPatient, partnerId } =
+  const { patientId, type, amount, amountCovered, amountByPatient, partnerId, partnerInfo, date } =
     req.body;
 
   // Check if patient exists
@@ -118,6 +118,8 @@ exports.createReceipt = catchAsync(async (req, res, next) => {
       amountByPatient,
       partnerId,
       receiptId,
+      partnerInfo,
+      date,
     })
     .returning();
 

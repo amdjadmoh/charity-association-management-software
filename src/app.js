@@ -20,6 +20,7 @@ const materialTypeRoutes = require('./routes/materialTypeRoutes');
 const materialRoutes = require('./routes/materialRoutes');
 const materialLoanRoutes = require('./routes/materialLoanRoutes');
 const sackRoutes= require('./routes/sackRoutes');
+const moneyTrackRoutes = require('./routes/moneyTrackRoutes');
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use('/api/v1/material-types', materialTypeRoutes);
 app.use('/api/materials', materialRoutes);
 app.use('/api/material-loans', materialLoanRoutes);
 app.use('/api/v1/sacks', sackRoutes);
+app.use('/api/v1/finances', moneyTrackRoutes);
 
 
 // Handle undefined routes

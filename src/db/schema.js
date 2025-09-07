@@ -1,4 +1,4 @@
-import { integer, pgTable, varchar, pgEnum, serial, time, boolean, date, doublePrecision, check, jsonb} from "drizzle-orm/pg-core";
+import { integer, pgTable, varchar, pgEnum, serial, time, boolean, date, doublePrecision, check, jsonb, timestamp} from "drizzle-orm/pg-core";
 import { sql,eq,gte, desc, is } from "drizzle-orm";
 
 
@@ -62,6 +62,7 @@ export const patient = pgTable("patient", {
   sickID: varchar( { length: 20 }).unique(),
   coucheType: varchar( { length: 50 }),
   active: boolean().notNull().default(true),
+  deceased: boolean().notNull().default(false),
 });
 
 export const products= pgTable("product",{
@@ -91,7 +92,7 @@ export const Donation = pgTable("donation", {
     .notNull()
     .references(() => Donor.id, { onDelete: "cascade" }),
   amount: doublePrecision().notNull(),
-  date: date().notNull(),
+  date: timestamp().defaultNow(),
   type: DonationType().notNull(),
   usedAmount: doublePrecision().notNull().default(0),
 },(table)=>[
@@ -108,6 +109,7 @@ export const DonationStock = pgTable("donation_stock", {
     .notNull()
     .references(() => stock.id, { onDelete: "cascade" }),
   amount: integer().notNull(),
+  createdAt: timestamp().defaultNow()
 });
 
 
@@ -126,8 +128,9 @@ export const receipt = pgTable("receipt", {
   id: serial().primaryKey(),
   receiptId: varchar( { length: 20 }).notNull().unique(),
   patientId: integer("patient_id")
-    .notNull()
     .references(() => patient.id, { onDelete: "cascade" }),
+  partnerInfo: varchar( { length: 512 }),
+  date: date().notNull(),
   type: varchar( { length: 50 }).notNull(),
   amount: doublePrecision(),
   amountCovered: doublePrecision(),
@@ -146,6 +149,7 @@ export const receiptDonations = pgTable("receipt_donations", {
     .notNull()
     .references(() => Donation.id, { onDelete: "cascade" }),
   amount: doublePrecision().notNull(),
+  createdAt: timestamp().defaultNow()
 });
 
 export const partner = pgTable("partner", {
@@ -188,6 +192,7 @@ export const materialDonations = pgTable("material_donations", {
     .notNull()
     .references(() => Donation.id, { onDelete: "cascade" }),
   amount: doublePrecision().notNull(),
+  createdAt: timestamp().defaultNow()
   
 });
 export const loanStatusEnum = pgEnum("loan_status", ["active", "returned"]);
