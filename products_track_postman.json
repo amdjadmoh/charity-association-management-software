@@ -1,0 +1,134 @@
+{
+  "info": {
+    "_postman_id": "c5e6f9a0-5123-4f89-bd8a-a7f0db6a4e3d",
+    "name": "Products Tracking",
+    "description": "Collection of routes for tracking products movements, including stock additions and distributions to patients",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Product Movements",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/products-track",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "products-track"
+          ]
+        },
+        "description": "Retrieves all product movements (both incoming stock additions and outgoing distributions) with details including product name, quantity, date, patient info, and running balance."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Product Movements by Date Range",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/products-track/date-range?startDate=2025-01-01&endDate=2025-09-10",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "products-track",
+            "date-range"
+          ],
+          "query": [
+            {
+              "key": "startDate",
+              "value": "2025-01-01",
+              "description": "Start date in YYYY-MM-DD format"
+            },
+            {
+              "key": "endDate",
+              "value": "2025-09-10",
+              "description": "End date in YYYY-MM-DD format"
+            }
+          ]
+        },
+        "description": "Filters product movements within a specific date range. Includes both stock additions and distributions to patients that occurred between the specified dates."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Product Summary",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/products-track/summary",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "products-track",
+            "summary"
+          ]
+        },
+        "description": "Returns a summary of all products including current stock levels, total distributed quantities, and distribution counts."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Movements for Specific Product",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/products-track/product/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "products-track",
+            "product",
+            "1"
+          ]
+        },
+        "description": "Retrieves all movements (both stock additions and distributions) for a specific product. The product ID is specified in the URL. Includes a running balance calculation."
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string",
+      "description": "Base URL for the API - change this to match your server"
+    }
+  ]
+}

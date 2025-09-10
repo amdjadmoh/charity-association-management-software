@@ -4,6 +4,25 @@ const { eq, sql, and, desc, asc, gte, lte } = require('drizzle-orm');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 // SACK CONTROLLERS
+
+exports.getDistributedsacksinPeriod = catchAsync(async (req, res, next) => {
+  const { startDate, endDate } = req.query;
+  if (!startDate || !endDate) {
+    return next(new AppError('Please provide both startDate and endDate in the query parameters', 400));
+  }
+ const sacks= await db.select().from(sackPatients)
+  .where(and(
+    gte(sackPatients.distributionDate, new Date(startDate)),
+    lte(sackPatients.distributionDate, new Date(endDate))
+  ))
+  .orderBy(desc(sackPatients.distributionDate), asc(sackPatients.id));
+  res.status(200).json({
+    status: 'success',
+    results: sacks.length,
+    data: { sacks }
+  });
+});
+
 exports.getAllSacks = catchAsync(async (req, res) => {
   const sacks = await db
     .select({
@@ -296,15 +315,7 @@ exports.distributeSackToPatient = catchAsync(async (req, res, next) => {
     })
     .where(eq(products.id, product.productId));
 }
-    // Create detailed snapshot entries
-    const snapshotValues = sackProductsSnapshot.map(product => ({
-      distributionId: distribution.id,
-      productId: product.productId,
-      productName: product.productName,
-      quantity: product.quantity
-    }));
-
-    await tx.insert(sackDistributionSnapshot).values(snapshotValues);
+   
 
     return {
       ...distribution,

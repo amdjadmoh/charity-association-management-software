@@ -19,6 +19,9 @@ router
 router
   .route('/:sackId/distribute')
   .post(sackController.distributeSackToPatient);
+router
+  .route('/distributions/period')
+  .get(sackController.getDistributedsacksinPeriod);  
 
 router
   .route('/distributions/:id')

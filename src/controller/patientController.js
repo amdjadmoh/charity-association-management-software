@@ -208,6 +208,16 @@ exports.createPatient = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePatient = catchAsync(async (req, res, next) => {
+  const patient= await db
+    .select()
+    .from(patient)
+    .where(eq(patient.id, req.params.id))
+    .limit(1);
+
+  if (!patient.length) {
+    return next(new AppError("No patient found with that ID", 404));
+  }
+
   if (req.body.disease) {
     // Validate disease exists
     const diseaseExists = await db
@@ -233,7 +243,101 @@ exports.updatePatient = catchAsync(async (req, res, next) => {
       return next(new AppError("City not found", 404));
     }
   }
+  if(!patient[0].celiac && req.body.celiac && !req.body.celiacID) {
+    const year = new Date().getFullYear();
+    
+    // Get all sick IDs for this year
+    const allSickIDs = await db
+      .select()
+      .from(patient)
+      .where(sql`${patient.sickID} LIKE ${year + '-%'}`);
+    
+    // Find the max number by parsing all IDs
+    let maxNumber = 0;
+    for (const pat of allSickIDs) {
+      const parts = pat.sickID.split('-');
+      if (parts.length === 2) {
+        const num = parseInt(parts[1], 10);
+        if (!isNaN(num) && num > maxNumber) {
+          maxNumber = num;
+        }
+      }
+    }
+    
+    // Create the new ID with the next number
+    req.body.sickID = `${year}-${maxNumber + 1}`;
+  }
+  if(!patient[0].rehabilitation && req.body.rehabilitation && !req.body.rehabilitationID) {
+    const year = new Date().getFullYear();
 
+    // Get all rehabilitation IDs for this year
+    const allRehabilitationIDs = await db
+      .select()
+      .from(patient)
+      .where(sql`${patient.rehabilitationID} LIKE ${year + '-%'}`);
+
+    // Find the max number by parsing all IDs
+    let maxNumber = 0;
+    for (const pat of allRehabilitationIDs) {
+      const parts = pat.rehabilitationID.split('-');
+      if (parts.length === 2) {
+        const num = parseInt(parts[1], 10);
+        if (!isNaN(num) && num > maxNumber) {
+          maxNumber = num;
+        }
+      }
+    }
+
+    // Create the new ID with the next number
+    req.body.rehabilitationID = `${year}-${maxNumber + 1}`;
+  }
+  if(!patient[0].isDisabled && req.body.isDisabled && !req.body.disabledID) {
+    const year = new Date().getFullYear();
+    
+    // Get all disabled IDs for this year
+    const allDisabledIDs = await db
+      .select()
+      .from(patient)
+      .where(sql`${patient.disabledID} LIKE ${year + '-%'}`);
+    
+    // Find the max number by parsing all IDs
+    let maxNumber = 0;
+    for (const pat of allDisabledIDs) {
+      const parts = pat.disabledID.split('-');
+      if (parts.length === 2) {
+        const num = parseInt(parts[1], 10);
+        if (!isNaN(num) && num > maxNumber) {
+          maxNumber = num;
+        }
+      }
+    }
+    
+    // Create the new ID with the next number
+    req.body.disabledID = `${year}-${maxNumber + 1}`;
+  }
+  if(!patient[0].sick && req.body.sick && !req.body.sickID) {
+    const year = new Date().getFullYear();
+    // Get all sick IDs for this year
+    const allSickIDs = await db
+      .select()
+      .from(patient)
+      .where(sql`${patient.sickID} LIKE ${year + '-%'}`);
+
+    // Find the max number by parsing all IDs
+    let maxNumber = 0;
+    for (const pat of allSickIDs) {
+      const parts = pat.sickID.split('-');
+      if (parts.length === 2) {
+        const num = parseInt(parts[1], 10);
+        if (!isNaN(num) && num > maxNumber) {
+          maxNumber = num;
+        }
+      }
+    }
+
+    // Create the new ID with the next number
+    req.body.sickID = `${year}-${maxNumber + 1}`;
+  }
   const updatedPatient = await db
     .update(patient)
     .set(req.body)

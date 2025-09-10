@@ -244,10 +244,13 @@ export const sackPatients = pgTable("sack_patients", {
   productsSnapshot: jsonb(), // Stores the product array directly
 });
 
-export const sackDistributionSnapshot = pgTable("sack_distribution_snapshot", {
+export const supplyRequest= pgTable("supply_request",{
   id: serial().primaryKey(),
-  distributionId: integer().references(() => sackPatients.id),
-  productId: integer().references(() => products.id),
-  productName: varchar({ length: 256 }),
-  quantity: integer(),
+  type:varchar( { length: 50 }).notNull(),
+  productId: integer(),
+  materialId: integer(),
+  quantity: integer().notNull(),
+  source: varchar( { length: 256 }),
+  notes: varchar( { length: 512 }),
+  requestDate: date().notNull(),
 });

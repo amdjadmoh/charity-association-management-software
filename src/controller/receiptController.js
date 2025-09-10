@@ -4,6 +4,7 @@ const { eq, desc, sql } = require("drizzle-orm");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const { getPatient } = require("./patientController");
+const e = require("express");
 
 exports.getAllReceipts = catchAsync(async (req, res) => {
   const receipts = await db
@@ -83,6 +84,25 @@ exports.createReceipt = catchAsync(async (req, res, next) => {
     return next(new AppError("Receipt type is required", 400));
   }
 
+  if (req.body.receiptId) {
+    // Validate receiptId format
+    const receiptIdPattern = /^\d{4}-\d+$/;
+    if (!receiptIdPattern.test(req.body.receiptId)) {
+      return next(new AppError("Invalid receipt ID format", 400));
+    }
+    // Check if receiptId already exists
+    const existingReceipt = await db
+      .select()
+      .from(receipt)
+      .where(eq(receipt.receiptId, req.body.receiptId))
+      .limit(1);
+
+    if (existingReceipt.length) {
+      return next(new AppError("Receipt ID already exists", 400));
+    }
+     receiptId = req.body.receiptId;
+  } else {
+
   // Generate receipt ID with year-id format
   const year = new Date().getFullYear();
 
@@ -105,8 +125,8 @@ exports.createReceipt = catchAsync(async (req, res, next) => {
   }
 
   // Create the new ID with the next number
-  const receiptId = `${year}-${maxNumber + 1}`;
-
+   receiptId = `${year}-${maxNumber + 1}`;
+  }
   // Create the receipt with the generated ID
   const newReceipt = await db
     .insert(receipt)
@@ -166,8 +186,6 @@ exports.updateReceipt = catchAsync(async (req, res, next) => {
     }
   }
 
-  // Don't allow updating the receiptId
-  delete req.body.receiptId;
 
   const updatedReceipt = await db
     .update(receipt)
