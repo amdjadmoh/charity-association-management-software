@@ -1,6 +1,6 @@
 const { sack, sackProducts, sackPatients, products, patient, User, sackDistributionSnapshot } = require('../db/schema');
 const { db } = require('../db');
-const { eq, sql, and, desc, asc, gte, lte } = require('drizzle-orm');
+const { eq, sql, and, desc, asc, gte, lte ,} = require('drizzle-orm');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 // SACK CONTROLLERS
@@ -15,6 +15,7 @@ exports.getDistributedsacksinPeriod = catchAsync(async (req, res, next) => {
     gte(sackPatients.distributionDate, new Date(startDate)),
     lte(sackPatients.distributionDate, new Date(endDate))
   ))
+  .leftJoin(sack, eq(sackPatients.sackId, sack.id))
   .orderBy(desc(sackPatients.distributionDate), asc(sackPatients.id));
   res.status(200).json({
     status: 'success',

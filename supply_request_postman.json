@@ -48,7 +48,7 @@
 			"response": []
 		},
 		{
-			"name": "Create Supply Request",
+			"name": "Create Supply Request (Multiple Products)",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -60,7 +60,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"type\": \"product\",\n    \"productId\": 1,\n    \"quantity\": 10,\n    \"source\": \"Local supplier\",\n    \"notes\": \"Need this product urgently\"\n}"
+					"raw": "{\n    \"type\": \"product\",\n    \"productsData\": [\n        {\n            \"id\": 1,\n            \"quantity\": 10\n        },\n        {\n            \"id\": 2,\n            \"quantity\": 5\n        }\n    ],\n    \"source\": \"Local supplier\",\n    \"notes\": \"Need these products urgently\"\n}"
 				},
 				"url": {
 					"raw": "{{baseUrl}}/api/v1/supply-requests",
@@ -73,12 +73,12 @@
 						"supply-requests"
 					]
 				},
-				"description": "Create a new supply request. For product type, provide productId. For material type, provide materialId."
+				"description": "Create a new supply request with multiple products. Provide an array of product objects, each with id and quantity."
 			},
 			"response": []
 		},
 		{
-			"name": "Create Material Supply Request",
+			"name": "Create Supply Request (Multiple Materials)",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -90,7 +90,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"type\": \"material\",\n    \"materialId\": 1,\n    \"quantity\": 2,\n    \"source\": \"Hospital supplier\",\n    \"notes\": \"Need two wheelchairs\"\n}"
+					"raw": "{\n    \"type\": \"material\",\n    \"materialsData\": [\n        {\n            \"id\": 1,\n            \"quantity\": 2\n        },\n        {\n            \"id\": 3,\n            \"quantity\": 1\n        }\n    ],\n    \"source\": \"Hospital supplier\",\n    \"notes\": \"Need multiple medical materials\"\n}"
 				},
 				"url": {
 					"raw": "{{baseUrl}}/api/v1/supply-requests",
@@ -103,7 +103,7 @@
 						"supply-requests"
 					]
 				},
-				"description": "Create a new supply request for materials."
+				"description": "Create a new supply request for multiple materials. Provide an array of material objects, each with id and quantity."
 			},
 			"response": []
 		},
@@ -120,7 +120,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"quantity\": 15,\n    \"notes\": \"Updated: Increased quantity needed\"\n}"
+					"raw": "{\n    \"productsData\": [\n        {\n            \"id\": 1,\n            \"quantity\": 15\n        },\n        {\n            \"id\": 2,\n            \"quantity\": 8\n        }\n    ],\n    \"notes\": \"Updated: Increased quantities needed\"\n}"
 				},
 				"url": {
 					"raw": "{{baseUrl}}/api/v1/supply-requests/1",

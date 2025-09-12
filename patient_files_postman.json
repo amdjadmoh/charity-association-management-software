@@ -1,0 +1,272 @@
+{
+	"info": {
+		"_postman_id": "93c4f83e-7a84-46a9-b501-8d7c9a8f6d21",
+		"name": "Patient Files Management",
+		"description": "API endpoints for managing patient files in the association application.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Upload Single File",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": []
+						},
+						{
+							"key": "description",
+							"value": "Patient medical report",
+							"type": "text"
+						},
+						{
+							"key": "fileCategory",
+							"value": "medical",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/patients/:id/files",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"patients",
+						":id",
+						"files"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Patient ID"
+						}
+					]
+				},
+				"description": "Upload a single file for a patient. The file should be provided in the 'file' field. Optional fields include 'description' and 'fileCategory'."
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Multiple Files",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "files",
+							"type": "file",
+							"src": [],
+							"description": "Can select multiple files"
+						},
+						{
+							"key": "description",
+							"value": "Patient documents",
+							"type": "text"
+						},
+						{
+							"key": "fileCategory",
+							"value": "id",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/patients/:id/files/multiple",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"patients",
+						":id",
+						"files",
+						"multiple"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Patient ID"
+						}
+					]
+				},
+				"description": "Upload multiple files for a patient. The files should be provided in the 'files' field. Optional fields include 'description' and 'fileCategory'."
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Patient Files",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/patients/:id/files",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"patients",
+						":id",
+						"files"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Patient ID"
+						}
+					]
+				},
+				"description": "Get all files for a specific patient."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Specific Patient File",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/patients/:id/files/:fileId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"patients",
+						":id",
+						"files",
+						":fileId"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Patient ID"
+						},
+						{
+							"key": "fileId",
+							"value": "1",
+							"description": "File ID"
+						}
+					]
+				},
+				"description": "Get details for a specific file."
+			},
+			"response": []
+		},
+		{
+			"name": "Download Patient File",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/patients/:id/files/:fileId/download",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"patients",
+						":id",
+						"files",
+						":fileId",
+						"download"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Patient ID"
+						},
+						{
+							"key": "fileId",
+							"value": "1",
+							"description": "File ID"
+						}
+					]
+				},
+				"description": "Download a specific file."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Patient File",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/patients/:id/files/:fileId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"patients",
+						":id",
+						"files",
+						":fileId"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Patient ID"
+						},
+						{
+							"key": "fileId",
+							"value": "1",
+							"description": "File ID"
+						}
+					]
+				},
+				"description": "Delete a specific file for a patient."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}

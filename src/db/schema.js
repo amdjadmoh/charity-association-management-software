@@ -65,6 +65,22 @@ export const patient = pgTable("patient", {
   deceased: boolean().notNull().default(false),
 });
 
+// Patient files table for storing uploaded documents
+export const patientFiles = pgTable("patient_files", {
+  id: serial().primaryKey(),
+  patientId: integer("patient_id")
+    .notNull()
+    .references(() => patient.id, { onDelete: "cascade" }),
+  fileName: varchar( { length: 256 }).notNull(),
+  originalName: varchar( { length: 256 }).notNull(),
+  fileType: varchar( { length: 100 }).notNull(),
+  fileSize: integer().notNull(),
+  filePath: varchar( { length: 512 }).notNull(),
+  uploadDate: timestamp().defaultNow(),
+  description: varchar( { length: 512 }),
+  fileCategory: varchar( { length: 100 }), // e.g., "medical", "id", "application", etc.
+});
+
 export const products= pgTable("product",{
   id: serial().primaryKey(),
   productName: varchar( { length: 256 }).notNull(),
@@ -244,13 +260,26 @@ export const sackPatients = pgTable("sack_patients", {
   productsSnapshot: jsonb(), // Stores the product array directly
 });
 
-export const supplyRequest= pgTable("supply_request",{
+export const supplyRequest = pgTable("supply_request", {
   id: serial().primaryKey(),
-  type:varchar( { length: 50 }).notNull(),
-  productId: integer(),
-  materialId: integer(),
-  quantity: integer().notNull(),
-  source: varchar( { length: 256 }),
-  notes: varchar( { length: 512 }),
+  type: varchar({ length: 50 }).notNull(), // Can be 'product', 'material', or 'mixed'
+  source: varchar({ length: 256 }),
+  notes: varchar({ length: 512 }),
   requestDate: date().notNull(),
+});
+
+// Junction table for supply requests and products
+export const supplyRequestProducts = pgTable("supply_request_products", {
+  id: serial().primaryKey(),
+  supplyRequestId: integer().references(() => supplyRequest.id, { onDelete: 'cascade' }).notNull(),
+  productId: integer().references(() => products.id).notNull(),
+  quantity: integer().notNull().default(1),
+});
+
+// Junction table for supply requests and materials
+export const supplyRequestMaterials = pgTable("supply_request_materials", {
+  id: serial().primaryKey(),
+  supplyRequestId: integer().references(() => supplyRequest.id, { onDelete: 'cascade' }).notNull(),
+  materialId: integer().references(() => material.id).notNull(),
+  quantity: integer().notNull().default(1),
 });

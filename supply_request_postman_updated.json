@@ -1,0 +1,243 @@
+{
+	"info": {
+		"_postman_id": "a5c79b12-14a5-47a9-a7d4-c4a4d2e5c6bf",
+		"name": "Supply Request Management",
+		"description": "API endpoints for managing supply requests in the association application.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All Supply Requests",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/supply-requests",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"supply-requests"
+					]
+				},
+				"description": "Get a list of all supply requests with related product or material information."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Supply Request By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/supply-requests/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"supply-requests",
+						"1"
+					]
+				},
+				"description": "Get a specific supply request by its ID with related product or material details."
+			},
+			"response": []
+		},
+		{
+			"name": "Create Supply Request (Multiple Products)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"product\",\n    \"productsData\": [\n        {\n            \"id\": 1,\n            \"quantity\": 10\n        },\n        {\n            \"id\": 2,\n            \"quantity\": 5\n        }\n    ],\n    \"source\": \"Local supplier\",\n    \"notes\": \"Need these products urgently\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/supply-requests",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"supply-requests"
+					]
+				},
+				"description": "Create a new supply request with multiple products. Provide an array of product objects, each with productId and quantity."
+			},
+			"response": []
+		},
+		{
+			"name": "Create Supply Request (Multiple Materials)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"material\",\n    \"materialsData\": [\n        {\n            \"id\": 1,\n            \"quantity\": 2\n        },\n        {\n            \"id\": 3,\n            \"quantity\": 1\n        }\n    ],\n    \"source\": \"Hospital supplier\",\n    \"notes\": \"Need wheelchairs and crutches\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/supply-requests",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"supply-requests"
+					]
+				},
+				"description": "Create a new supply request with multiple materials. Provide an array of material objects, each with materialId and quantity."
+			},
+			"response": []
+		},
+		{
+			"name": "Update Supply Request",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productsData\": [\n        {\n            \"id\": 1,\n            \"quantity\": 15\n        },\n        {\n            \"id\": 2,\n            \"quantity\": 8\n        }\n    ],\n    \"notes\": \"Updated: Increased quantities needed\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/supply-requests/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"supply-requests",
+						"1"
+					]
+				},
+				"description": "Update an existing supply request. Only include fields you want to update. You can update the whole products or materials array."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Supply Request",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/supply-requests/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"supply-requests",
+						"1"
+					]
+				},
+				"description": "Delete a supply request by its ID."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Supply Requests By Date Range",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/supply-requests/date-range?startDate=2025-01-01&endDate=2025-12-31",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"supply-requests",
+						"date-range"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2025-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2025-12-31"
+						}
+					]
+				},
+				"description": "Get all supply requests within a specific date range."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Supply Requests By Type",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/supply-requests/type/product",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"supply-requests",
+						"type",
+						"product"
+					]
+				},
+				"description": "Get all supply requests filtered by type (product or material)."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
