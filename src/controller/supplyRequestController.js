@@ -24,7 +24,8 @@ exports.getAllSupplyRequests = catchAsync(async (req, res) => {
           quantity: supplyRequestProducts.quantity,
           name: productsTable.productName,
           type: productsTable.type,
-          description: productsTable.description
+          description: productsTable.description,
+          note: supplyRequestProducts.notes
         })
         .from(supplyRequestProducts)
         .leftJoin(productsTable, eq(supplyRequestProducts.productId, productsTable.id))
@@ -40,7 +41,8 @@ exports.getAllSupplyRequests = catchAsync(async (req, res) => {
           inventoryNumber: materialTable.inventory_number,
           typeName: materialTypes.name,
           status: materialTable.status,
-          notes: materialTable.notes
+          notes: materialTable.notes,
+          note: supplyRequestMaterials.notes
         })
         .from(supplyRequestMaterials)
         .leftJoin(materialTable, eq(supplyRequestMaterials.materialId, materialTable.id))
@@ -85,7 +87,8 @@ exports.getSupplyRequest = catchAsync(async (req, res, next) => {
       quantity: supplyRequestProducts.quantity,
       name: productsTable.productName,
       type: productsTable.type,
-      description: productsTable.description
+      description: productsTable.description,
+      note: supplyRequestProducts.notes
     })
     .from(supplyRequestProducts)
     .leftJoin(productsTable, eq(supplyRequestProducts.productId, productsTable.id))
@@ -101,7 +104,8 @@ exports.getSupplyRequest = catchAsync(async (req, res, next) => {
       inventoryNumber: materialTable.inventory_number,
       typeName: materialTypes.name,
       status: materialTable.status,
-      notes: materialTable.notes
+      notes: materialTable.notes,
+      note: supplyRequestMaterials.notes
     })
     .from(supplyRequestMaterials)
     .leftJoin(materialTable, eq(supplyRequestMaterials.materialId, materialTable.id))
@@ -147,6 +151,52 @@ exports.createSupplyRequest = catchAsync(async (req, res, next) => {
     return next(new AppError('Materials data is required for material or mixed supply requests', 400));
   }
   
+  // Handle supplyRequestId generation
+  let supplyRequestId;
+  
+  if (req.body.supplyRequestId) {
+    // Validate supplyRequestId format
+    const supplyRequestIdPattern = /^\d{4}-\d+$/;
+    if (!supplyRequestIdPattern.test(req.body.supplyRequestId)) {
+      return next(new AppError("Invalid supply request ID format", 400));
+    }
+    // Check if supplyRequestId already exists
+    const existingSupplyRequest = await db
+      .select()
+      .from(supplyRequest)
+      .where(eq(supplyRequest.supplyRequestId, req.body.supplyRequestId))
+      .limit(1);
+
+    if (existingSupplyRequest.length) {
+      return next(new AppError("Supply Request ID already exists", 400));
+    }
+    supplyRequestId = req.body.supplyRequestId;
+  } else {
+    // Generate supply request ID with year-id format
+    const year = new Date().getFullYear();
+
+    // First get all supply requests for this year and find the maximum number
+    const allYearRequests = await db
+      .select()
+      .from(supplyRequest)
+      .where(sql`${supplyRequest.supplyRequestId} LIKE ${year + "-%"}`);
+
+    // Find the max number by parsing all IDs
+    let maxNumber = 0;
+    for (const req of allYearRequests) {
+      const parts = req.supplyRequestId.split("-");
+      if (parts.length === 2) {
+        const num = parseInt(parts[1], 10);
+        if (!isNaN(num) && num > maxNumber) {
+          maxNumber = num;
+        }
+      }
+    }
+
+    // Create the new ID with the next number
+    supplyRequestId = `${year}-${maxNumber + 1}`;
+  }
+  
   // Validate each product and material has id and quantity
   if (reqProducts && Array.isArray(reqProducts)) {
     const invalidProducts = reqProducts.filter(p => !p.productId || !p.quantity || p.quantity <= 0);
@@ -168,6 +218,7 @@ exports.createSupplyRequest = catchAsync(async (req, res, next) => {
     const newRequest = await tx
       .insert(supplyRequest)
       .values({
+        supplyRequestId,
         type,
         source: source || null,
         notes: notes || null,
@@ -186,7 +237,8 @@ exports.createSupplyRequest = catchAsync(async (req, res, next) => {
           await tx.insert(supplyRequestProducts).values({
             supplyRequestId: createdRequest.id,
             productId: product.productId,
-            quantity: product.quantity
+            quantity: product.quantity,
+            notes: product.notes || null
           });
         })
       );
@@ -199,7 +251,8 @@ exports.createSupplyRequest = catchAsync(async (req, res, next) => {
           quantity: supplyRequestProducts.quantity,
           name: productsTable.productName,
           type: productsTable.type,
-          description: productsTable.description
+          description: productsTable.description,
+          note: supplyRequestProducts.notes
         })
         .from(supplyRequestProducts)
         .leftJoin(productsTable, eq(supplyRequestProducts.productId, productsTable.id))
@@ -215,7 +268,8 @@ exports.createSupplyRequest = catchAsync(async (req, res, next) => {
           await tx.insert(supplyRequestMaterials).values({
             supplyRequestId: createdRequest.id,
             materialId: material.materialId,
-            quantity: material.quantity
+            quantity: material.quantity,
+            notes: material.notes || null
           });
         })
       );
@@ -229,7 +283,8 @@ exports.createSupplyRequest = catchAsync(async (req, res, next) => {
           inventoryNumber: materialTable.inventory_number,
           typeName: materialTypes.name,
           status: materialTable.status,
-          notes: materialTable.notes
+          notes: materialTable.notes,
+          note: supplyRequestMaterials.notes
         })
         .from(supplyRequestMaterials)
         .leftJoin(materialTable, eq(supplyRequestMaterials.materialId, materialTable.id))
@@ -344,7 +399,8 @@ exports.updateSupplyRequest = catchAsync(async (req, res, next) => {
             await tx.insert(supplyRequestProducts).values({
               supplyRequestId: supplyRequestId,
               productId: product.productId,
-              quantity: product.quantity
+              quantity: product.quantity,
+              notes: product.notes || null
             });
           })
         );
@@ -365,7 +421,8 @@ exports.updateSupplyRequest = catchAsync(async (req, res, next) => {
             await tx.insert(supplyRequestMaterials).values({
               supplyRequestId: supplyRequestId,
               materialId: material.materialId,
-              quantity: material.quantity
+              quantity: material.quantity,
+              notes: material.notes || null
             });
           })
         );
@@ -380,7 +437,8 @@ exports.updateSupplyRequest = catchAsync(async (req, res, next) => {
         quantity: supplyRequestProducts.quantity,
         name: productsTable.productName,
         type: productsTable.type,
-        description: productsTable.description
+        description: productsTable.description,
+        note: supplyRequestProducts.notes
       })
       .from(supplyRequestProducts)
       .leftJoin(productsTable, eq(supplyRequestProducts.productId, productsTable.id))
@@ -395,7 +453,8 @@ exports.updateSupplyRequest = catchAsync(async (req, res, next) => {
         inventoryNumber: materialTable.inventory_number,
         typeName: materialTypes.name,
         status: materialTable.status,
-        notes: materialTable.notes
+        notes: materialTable.notes,
+        note: supplyRequestMaterials.notes
       })
       .from(supplyRequestMaterials)
       .leftJoin(materialTable, eq(supplyRequestMaterials.materialId, materialTable.id))

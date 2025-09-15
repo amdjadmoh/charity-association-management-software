@@ -29,6 +29,13 @@
       "when": 1745301846058,
       "tag": "0003_snapshot_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1745601846058,
+      "tag": "0004_add_notes_to_supply_request_relations",
+      "breakpoints": true
     }
   ]
 }

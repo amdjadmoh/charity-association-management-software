@@ -262,6 +262,7 @@ export const sackPatients = pgTable("sack_patients", {
 
 export const supplyRequest = pgTable("supply_request", {
   id: serial().primaryKey(),
+  supplyRequestId: varchar({ length: 20 }).notNull().unique(),
   type: varchar({ length: 50 }).notNull(), // Can be 'product', 'material', or 'mixed'
   source: varchar({ length: 256 }),
   notes: varchar({ length: 512 }),
@@ -274,6 +275,7 @@ export const supplyRequestProducts = pgTable("supply_request_products", {
   supplyRequestId: integer().references(() => supplyRequest.id, { onDelete: 'cascade' }).notNull(),
   productId: integer().references(() => products.id).notNull(),
   quantity: integer().notNull().default(1),
+  notes: varchar({ length: 512 }),
 });
 
 // Junction table for supply requests and materials
@@ -282,4 +284,5 @@ export const supplyRequestMaterials = pgTable("supply_request_materials", {
   supplyRequestId: integer().references(() => supplyRequest.id, { onDelete: 'cascade' }).notNull(),
   materialId: integer().references(() => material.id).notNull(),
   quantity: integer().notNull().default(1),
+  notes: varchar({ length: 512 }),
 });
