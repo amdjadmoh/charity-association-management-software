@@ -11,7 +11,10 @@ exports.getActiveLoans = catchAsync(async (req, res) => {
       materialInventoryNumber: material.inventory_number,
       materialType: materialTypes.name,
       patientName: sql`${patient.firstName} || ' ' || ${patient.lastName}`,
-      lenderName: sql`${User.firstName} || ' ' || ${User.lastName}`
+      lenderName: sql`${User.firstName} || ' ' || ${User.lastName}`,
+      delivererName: materialLoans.delivererName,
+      delivererNIN: materialLoans.delivererNIN,
+      delivererPhone: materialLoans.delivererPhone
     })
     .from(materialLoans)
     .leftJoin(material, eq(materialLoans.materialId, material.id))
@@ -34,7 +37,10 @@ exports.getMaterialLoan = catchAsync(async (req, res, next) => {
       materialInventoryNumber: material.inventory_number,
       materialType: materialTypes.name,
       patientName: sql`${patient.firstName} || ' ' || ${patient.lastName}`,
-      lenderName: sql`${User.firstName} || ' ' || ${User.lastName}`
+      lenderName: sql`${User.firstName} || ' ' || ${User.lastName}`,
+      delivererName: materialLoans.delivererName,
+      delivererNIN: materialLoans.delivererNIN,
+      delivererPhone: materialLoans.delivererPhone
     })
     .from(materialLoans)
     .leftJoin(material, eq(materialLoans.materialId, material.id))
@@ -72,7 +78,10 @@ exports.getMaterialLoansByPatient = catchAsync(async (req, res, next) => {
       materialInventoryNumber: material.inventory_number,
       materialType: materialTypes.name,
       patientName: sql`${patient.firstName} || ' ' || ${patient.lastName}`,
-      lenderName: sql`${User.firstName} || ' ' || ${User.lastName}`
+      lenderName: sql`${User.firstName} || ' ' || ${User.lastName}`,
+      delivererName: materialLoans.delivererName,
+      delivererNIN: materialLoans.delivererNIN,
+      delivererPhone: materialLoans.delivererPhone
     })
     .from(materialLoans)
     .leftJoin(material, eq(materialLoans.materialId, material.id))
@@ -107,7 +116,10 @@ exports.getMaterialLoansByMaterial = catchAsync(async (req, res, next) => {
       materialInventoryNumber: material.inventory_number,
       materialType: materialTypes.name,
       patientName: sql`${patient.firstName} || ' ' || ${patient.lastName}`,
-      lenderName: sql`${User.firstName} || ' ' || ${User.lastName}`
+      lenderName: sql`${User.firstName} || ' ' || ${User.lastName}`,
+      delivererName: materialLoans.delivererName,
+      delivererNIN: materialLoans.delivererNIN,
+      delivererPhone: materialLoans.delivererPhone
     })
     .from(materialLoans)
     .leftJoin(material, eq(materialLoans.materialId, material.id))
@@ -179,7 +191,10 @@ exports.createMaterialLoan = catchAsync(async (req, res, next) => {
       patientId,
       loanDate: loanDate || new Date(),
       returnDate,
-      lenderId
+      lenderId,
+      delivererName: req.body.delivererName,
+      delivererNIN: req.body.delivererNIN,
+      delivererPhone: req.body.delivererPhone
     })
     .returning();
 

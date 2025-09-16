@@ -87,6 +87,7 @@ export const products= pgTable("product",{
   description: varchar( { length: 512 }),
   type: varchar( { length: 256 }).notNull(),
   quantity: integer().notNull().default(0),
+  barcode: varchar( { length: 100 }).unique()
 })
 
 
@@ -227,6 +228,9 @@ export const materialLoans = pgTable("material_loans", {
     .notNull()
     .references(() => User.id, { onDelete: "cascade" }),
   status: loanStatusEnum().notNull().default("active"),
+  delivererName: varchar( { length: 256 }).notNull(),
+  delivererNIN: varchar( { length: 20 }).notNull(),
+  delivererPhone: varchar( { length: 15 }).notNull(),
 });
 
 export const sack = pgTable("sack", {
