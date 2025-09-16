@@ -85,3 +85,18 @@ exports.deleteProduct = catchAsync(async (req, res, next) => {
     data: null
   });
 });
+
+exports.getProductByBarcode = catchAsync(async (req, res, next) => {
+  const product = await db.select()
+
+    .from(products)
+    .where(eq(products.barcode, req.params.barcode))
+    .limit(1);
+  if (!product.length) {
+    return next(new AppError('No product found with that barcode', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    data: { product: product[0] }
+  });
+});

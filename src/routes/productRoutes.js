@@ -7,6 +7,7 @@ router
   .route('/')
   .get(productController.getAllProducts)
   .post(productController.createProduct);
+router.route('/barcode/:barcode')
 
 router
   .route('/:id')
