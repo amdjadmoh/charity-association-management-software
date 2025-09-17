@@ -1,4 +1,4 @@
-const { supplyRequest, products, material, materialTypes, supplyRequestProducts, supplyRequestMaterials } = require('../db/schema');
+const { supplyRequest, products, materialTypes, supplyRequestProducts, supplyRequestMaterials } = require('../db/schema');
 const { db } = require('../db');
 const { eq, sql, desc, and, or, between } = require('drizzle-orm');
 const AppError = require('../utils/appError');
@@ -32,21 +32,16 @@ exports.getAllSupplyRequests = catchAsync(async (req, res) => {
         .where(eq(supplyRequestProducts.supplyRequestId, request.id));
 
       // Get materials for this request
-      const materialTable = material;  // Rename to avoid confusion
       const requestMaterials = await db
         .select({
           id: supplyRequestMaterials.id,
           materialId: supplyRequestMaterials.materialId,
           quantity: supplyRequestMaterials.quantity,
-          inventoryNumber: materialTable.inventory_number,
           typeName: materialTypes.name,
-          status: materialTable.status,
-          notes: materialTable.notes,
           note: supplyRequestMaterials.notes
         })
         .from(supplyRequestMaterials)
-        .leftJoin(materialTable, eq(supplyRequestMaterials.materialId, materialTable.id))
-        .leftJoin(materialTypes, eq(materialTable.typeId, materialTypes.id))
+        .leftJoin(materialTypes, eq(supplyRequestMaterials.materialId, materialTypes.id))
         .where(eq(supplyRequestMaterials.supplyRequestId, request.id));
       
       return {
@@ -95,21 +90,16 @@ exports.getSupplyRequest = catchAsync(async (req, res, next) => {
     .where(eq(supplyRequestProducts.supplyRequestId, request.id));
 
   // Get materials for this request
-  const materialTable = material;  // Rename to avoid confusion
   const requestMaterials = await db
     .select({
       id: supplyRequestMaterials.id,
       materialId: supplyRequestMaterials.materialId,
       quantity: supplyRequestMaterials.quantity,
-      inventoryNumber: materialTable.inventory_number,
       typeName: materialTypes.name,
-      status: materialTable.status,
-      notes: materialTable.notes,
       note: supplyRequestMaterials.notes
     })
     .from(supplyRequestMaterials)
-    .leftJoin(materialTable, eq(supplyRequestMaterials.materialId, materialTable.id))
-    .leftJoin(materialTypes, eq(materialTable.typeId, materialTypes.id))
+    .leftJoin(materialTypes, eq(supplyRequestMaterials.materialId, materialTypes.id))
     .where(eq(supplyRequestMaterials.supplyRequestId, request.id));
   
   const enhancedRequest = {
@@ -130,7 +120,6 @@ exports.createSupplyRequest = catchAsync(async (req, res, next) => {
   
   // Get schema table references to avoid name conflicts
   const productsTable = products;
-  const materialTable = material;
   
   // Validate required fields
   if (!type) {
@@ -280,15 +269,11 @@ exports.createSupplyRequest = catchAsync(async (req, res, next) => {
           id: supplyRequestMaterials.id,
           materialId: supplyRequestMaterials.materialId,
           quantity: supplyRequestMaterials.quantity,
-          inventoryNumber: materialTable.inventory_number,
           typeName: materialTypes.name,
-          status: materialTable.status,
-          notes: materialTable.notes,
           note: supplyRequestMaterials.notes
         })
         .from(supplyRequestMaterials)
-        .leftJoin(materialTable, eq(supplyRequestMaterials.materialId, materialTable.id))
-        .leftJoin(materialTypes, eq(materialTable.typeId, materialTypes.id))
+        .leftJoin(materialTypes, eq(supplyRequestMaterials.materialId, materialTypes.id))
         .where(eq(supplyRequestMaterials.supplyRequestId, createdRequest.id));
     }
     
@@ -312,7 +297,6 @@ exports.updateSupplyRequest = catchAsync(async (req, res, next) => {
   
   // Get schema table references to avoid name conflicts
   const productsTable = products;
-  const materialTable = material;
   
   // Verify request exists
   const existingRequest = await db
@@ -450,15 +434,11 @@ exports.updateSupplyRequest = catchAsync(async (req, res, next) => {
         id: supplyRequestMaterials.id,
         materialId: supplyRequestMaterials.materialId,
         quantity: supplyRequestMaterials.quantity,
-        inventoryNumber: materialTable.inventory_number,
         typeName: materialTypes.name,
-        status: materialTable.status,
-        notes: materialTable.notes,
         note: supplyRequestMaterials.notes
       })
       .from(supplyRequestMaterials)
-      .leftJoin(materialTable, eq(supplyRequestMaterials.materialId, materialTable.id))
-      .leftJoin(materialTypes, eq(materialTable.typeId, materialTypes.id))
+      .leftJoin(materialTypes, eq(supplyRequestMaterials.materialId, materialTypes.id))
       .where(eq(supplyRequestMaterials.supplyRequestId, supplyRequestId));
     
     return {
@@ -554,20 +534,16 @@ exports.getSupplyRequestsByDateRange = catchAsync(async (req, res, next) => {
         .where(eq(supplyRequestProducts.supplyRequestId, request.id));
 
       // Get materials for this request
-      const materialTable = material;  // Rename to avoid confusion
       const requestMaterials = await db
         .select({
           id: supplyRequestMaterials.id,
           materialId: supplyRequestMaterials.materialId,
           quantity: supplyRequestMaterials.quantity,
-          inventoryNumber: materialTable.inventory_number,
           typeName: materialTypes.name,
-          status: materialTable.status,
-          notes: materialTable.notes
+          note: supplyRequestMaterials.notes
         })
         .from(supplyRequestMaterials)
-        .leftJoin(materialTable, eq(supplyRequestMaterials.materialId, materialTable.id))
-        .leftJoin(materialTypes, eq(materialTable.typeId, materialTypes.id))
+        .leftJoin(materialTypes, eq(supplyRequestMaterials.materialId, materialTypes.id))
         .where(eq(supplyRequestMaterials.supplyRequestId, request.id));
       
       return {
@@ -624,20 +600,16 @@ exports.getSupplyRequestsByType = catchAsync(async (req, res, next) => {
         .where(eq(supplyRequestProducts.supplyRequestId, request.id));
 
       // Get materials for this request
-      const materialTable = material;  // Rename to avoid confusion
       const requestMaterials = await db
         .select({
           id: supplyRequestMaterials.id,
           materialId: supplyRequestMaterials.materialId,
           quantity: supplyRequestMaterials.quantity,
-          inventoryNumber: materialTable.inventory_number,
           typeName: materialTypes.name,
-          status: materialTable.status,
-          notes: materialTable.notes
+          note: supplyRequestMaterials.notes
         })
         .from(supplyRequestMaterials)
-        .leftJoin(materialTable, eq(supplyRequestMaterials.materialId, materialTable.id))
-        .leftJoin(materialTypes, eq(materialTable.typeId, materialTypes.id))
+        .leftJoin(materialTypes, eq(supplyRequestMaterials.materialId, materialTypes.id))
         .where(eq(supplyRequestMaterials.supplyRequestId, request.id));
       
       return {

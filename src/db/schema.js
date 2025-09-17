@@ -286,7 +286,7 @@ export const supplyRequestProducts = pgTable("supply_request_products", {
 export const supplyRequestMaterials = pgTable("supply_request_materials", {
   id: serial().primaryKey(),
   supplyRequestId: integer().references(() => supplyRequest.id, { onDelete: 'cascade' }).notNull(),
-  materialId: integer().references(() => material.id).notNull(),
+  materialId: integer().references(() => materialTypes.id).notNull(),
   quantity: integer().notNull().default(1),
   notes: varchar({ length: 512 }),
 });
