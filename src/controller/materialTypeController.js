@@ -1,4 +1,4 @@
-const { materialTypes } = require('../db/schema');
+const { materialTypes,material } = require('../db/schema');
 const { db } = require('../db');
 const { eq } = require('drizzle-orm');
 const AppError = require('../utils/appError');
@@ -60,6 +60,14 @@ exports.updateMaterialType = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteMaterialType = catchAsync(async (req, res, next) => {
+  // check if material type is used in material table
+  const associatedMaterials = await db
+    .select()
+    .from(material)
+    .where(eq(material.typeId, req.params.id));
+  if (associatedMaterials.length) {
+    return next(new AppError('Cannot delete material type associated with existing materials', 400));
+  }
   const type = await db
     .delete(materialTypes)
     .where(eq(materialTypes.id, req.params.id))

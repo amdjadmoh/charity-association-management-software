@@ -1,4 +1,4 @@
-const { products } = require('../db/schema');
+const { products,stock } = require('../db/schema');
 const { db } = require('../db');
 const { eq } = require('drizzle-orm');
 const AppError = require('../utils/appError');
@@ -72,6 +72,13 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteProduct = catchAsync(async (req, res, next) => {
+// check if product has stock entries 
+  const stockEntries = await db.select().from(stock).where(eq(stock.productId, req.params.id));
+  if (stockEntries.length) {
+    return next(new AppError('Cannot delete product with existing stock entries', 400));
+  }
+  
+
   const deletedProduct = await db.delete(products)
     .where(eq(products.id, req.params.id))
     .returning();
