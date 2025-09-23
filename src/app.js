@@ -34,6 +34,18 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const buildPath = path.join(__dirname, 'dist');
+app.use(express.static(buildPath));
+
+// Handle all other routes by serving the frontend's index.html
+app.get('/app', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'), (err) => {
+        if (err) {
+            res.status(500).send('Error loading the frontend');
+        }
+    });
+});
+
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
