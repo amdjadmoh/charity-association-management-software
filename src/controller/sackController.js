@@ -387,6 +387,7 @@ exports.getPatientDistributions = catchAsync(async (req, res, next) => {
       quantity: sackPatients.quantity,
       distributionDate: sackPatients.distributionDate,
       distributedBy: sql`${User.firstName} || ' ' || ${User.lastName}`,
+      productsSnapshot: sackPatients.productsSnapshot,
     })
     .from(sackPatients)
     .leftJoin(sack, eq(sackPatients.sackId, sack.id))
@@ -394,31 +395,15 @@ exports.getPatientDistributions = catchAsync(async (req, res, next) => {
     .where(eq(sackPatients.patientId, req.params.patientId))
     .orderBy(desc(sackPatients.distributionDate));
 
-  // Parse the products snapshot from notes for each distribution
-  const distributionsWithProducts = distributions.map(dist => {
-    let productsSnapshot = [];
-    let displayNotes = dist.notes;
-    
-    if (dist.notes) {
-      const match = dist.notes.match(/Products: (\[.*\])/);
-      if (match && match[1]) {
-        try {
-          productsSnapshot = JSON.parse(match[1]);
-          // Remove the products part from notes for display
-          displayNotes = dist.notes.split('---')[0].trim();
-        } catch (err) {
-          // If parsing fails, just continue
-          console.error('Error parsing products snapshot:', err);
-        }
-      }
-    }
-    
-    return {
-      ...dist,
-      displayNotes,
-      products: productsSnapshot
-    };
-  });
+  const distributionsWithProducts = distributions.map(dist => ({
+    id: dist.id,
+    sackId: dist.sackId,
+    sackName: dist.sackName,
+    quantity: dist.quantity,
+    distributionDate: dist.distributionDate,
+    distributedBy: dist.distributedBy,
+    products: dist.productsSnapshot || [],
+  }));
 
   res.status(200).json({
     status: 'success',
