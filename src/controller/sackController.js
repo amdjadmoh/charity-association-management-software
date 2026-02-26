@@ -331,6 +331,8 @@ exports.distributeSackToPatient = catchAsync(async (req, res, next) => {
 });
 
 
+
+
 exports.getDistribution = catchAsync(async (req, res, next) => {
   const distribution = await db
     .select({
@@ -428,6 +430,45 @@ exports.getPatientDistributions = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.deleteDistribution = catchAsync(async (req, res, next) => {
+  const result = await db.transaction(async (tx) => {
+    // Find the distribution
+    const distribution = await tx
+      .select()
+      .from(sackPatients)
+      .where(eq(sackPatients.id, req.params.id))
+      .limit(1);
+
+    if (!distribution.length) {
+      throw new AppError('No distribution found with that ID', 404);
+    }
+
+    // Restore product quantities from the snapshot
+    const snapshot = distribution[0].productsSnapshot;
+    if (snapshot && Array.isArray(snapshot)) {
+      for (const item of snapshot) {
+        await tx
+          .update(products)
+          .set({
+            quantity: sql`${products.quantity} + ${item.quantity}`
+          })
+          .where(eq(products.id, item.productId));
+      }
+    }
+
+    // Delete the distribution record
+    await tx.delete(sackPatients).where(eq(sackPatients.id, req.params.id));
+
+    return distribution[0];
+  });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Distribution deleted and stock restored',
+    data: { distribution: result }
+  });
+});
+
 exports.getSackDistributions = catchAsync(async (req, res, next) => {
   // Check if sack exists
   const sackExists = await db
@@ -465,6 +506,7 @@ exports.getSackDistributions = catchAsync(async (req, res, next) => {
     }
   });
 });
+
 
 
 module.exports = exports;

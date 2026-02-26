@@ -25,7 +25,8 @@ router
 
 router
   .route('/distributions/:id')
-  .get(sackController.getDistribution);
+  .get(sackController.getDistribution)
+  .delete(sackController.deleteDistribution);
 
 router
   .route('/distributions/patients/:patientId')
