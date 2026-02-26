@@ -1,12 +1,12 @@
-import { integer, pgTable, varchar, pgEnum, serial, time, boolean, date, doublePrecision, check, jsonb, timestamp} from "drizzle-orm/pg-core";
-import { sql,eq,gte, desc, is } from "drizzle-orm";
+const { integer, pgTable, varchar, pgEnum, serial, time, boolean, date, doublePrecision, check, jsonb, timestamp} = require("drizzle-orm/pg-core");
+const { sql, eq, gte, desc } = require("drizzle-orm");
 
 
 // Define the enum types
-export const RoleEnums = pgEnum("role", ["admin","worker"]);
+const RoleEnums = pgEnum("role", ["admin","worker"]);
 
 // Define the tables
-export const User = pgTable("User", {
+const User = pgTable("User", {
   id: serial().primaryKey(),
   firstName: varchar( { length: 256 }).notNull(),
   lastName: varchar( { length: 256 }).notNull(),
@@ -16,7 +16,7 @@ export const User = pgTable("User", {
   role: RoleEnums().notNull(), 
 });
 
-export const Donor = pgTable("donor", {
+const Donor = pgTable("donor", {
   id: serial().primaryKey(),
   firstName: varchar( { length: 256 }).notNull(),
   lastName: varchar( { length: 256 }).notNull(),
@@ -26,16 +26,16 @@ export const Donor = pgTable("donor", {
   updatedAt: time().defaultNow(),
 });
 
-export const disease = pgTable("disease", {
+const disease = pgTable("disease", {
   id: serial().primaryKey(),
   name: varchar( { length: 256 }).notNull(),
 });
-export const city = pgTable("city", {
+const city = pgTable("city", {
   id: serial().primaryKey(),
   name: varchar( { length: 256 }).notNull(),
 });
 
-export const patient = pgTable("patient", {
+const patient = pgTable("patient", {
   id: serial().primaryKey(),
   firstName: varchar( { length: 256 }).notNull(),
   lastName: varchar( { length: 256 }).notNull(),
@@ -66,7 +66,7 @@ export const patient = pgTable("patient", {
 });
 
 // Patient files table for storing uploaded documents
-export const patientFiles = pgTable("patient_files", {
+const patientFiles = pgTable("patient_files", {
   id: serial().primaryKey(),
   patientId: integer("patient_id")
     .notNull()
@@ -81,7 +81,7 @@ export const patientFiles = pgTable("patient_files", {
   fileCategory: varchar( { length: 100 }), // e.g., "medical", "id", "application", etc.
 });
 
-export const products= pgTable("product",{
+const products= pgTable("product",{
   id: serial().primaryKey(),
   productName: varchar( { length: 256 }).notNull(),
   description: varchar( { length: 512 }),
@@ -91,7 +91,7 @@ export const products= pgTable("product",{
 })
 
 
-export const stock = pgTable("stock", {
+const stock = pgTable("stock", {
   id: serial().primaryKey(),
   productId: integer("product_id")
     .notNull()
@@ -101,9 +101,9 @@ export const stock = pgTable("stock", {
   unitPrice: doublePrecision().notNull(),
 });
 
-export const DonationType=pgEnum("donation_type",["zakat","sadaqa","other"]);
+const DonationType=pgEnum("donation_type",["zakat","sadaqa","other"]);
 
-export const Donation = pgTable("donation", {
+const Donation = pgTable("donation", {
   id: serial().primaryKey(),
   donorId: integer("donor_id")
     .notNull()
@@ -117,7 +117,7 @@ export const Donation = pgTable("donation", {
 ]
 );
 
-export const DonationStock = pgTable("donation_stock", {
+const DonationStock = pgTable("donation_stock", {
   id: serial().primaryKey(),
   donationId: integer("donation_id")
     .notNull()
@@ -131,7 +131,7 @@ export const DonationStock = pgTable("donation_stock", {
 
 
 
-export const distributors = pgTable("distributors", {
+const distributors = pgTable("distributors", {
   id: serial().primaryKey(),
   name: varchar( { length: 256 }).notNull(),
   address: varchar( { length: 512 }),
@@ -141,7 +141,7 @@ export const distributors = pgTable("distributors", {
   email: varchar( { length: 256 }),
 });
 
-export const receipt = pgTable("receipt", {
+const receipt = pgTable("receipt", {
   id: serial().primaryKey(),
   receiptId: varchar( { length: 20 }).notNull().unique(),
   patientId: integer("patient_id")
@@ -157,7 +157,7 @@ export const receipt = pgTable("receipt", {
   partnerId: integer("partner_id")
     .references(() => partner.id, { onDelete: "cascade" }),
 });
-export const receiptDonations = pgTable("receipt_donations", {
+const receiptDonations = pgTable("receipt_donations", {
   id: serial().primaryKey(),
   receiptId: integer("receipt_id")
     .notNull()
@@ -169,7 +169,7 @@ export const receiptDonations = pgTable("receipt_donations", {
   createdAt: timestamp().defaultNow()
 });
 
-export const partner = pgTable("partner", {
+const partner = pgTable("partner", {
   id: serial().primaryKey(),
   type:varchar( { length: 512 }).notNull(),
   name: varchar( { length: 512 }).notNull(),
@@ -181,13 +181,13 @@ export const partner = pgTable("partner", {
   isActive: boolean().notNull().default(true),
 });
 
-export const materialTypes = pgTable("material_types", {
+const materialTypes = pgTable("material_types", {
   id: serial().primaryKey(),
   name: varchar( { length: 256 }).notNull(),
 });
 
-export const statusEnum = pgEnum("status", ["available", "unavailable","lost"]);
-export const material = pgTable("material", {
+const statusEnum = pgEnum("status", ["available", "unavailable","lost"]);
+const material = pgTable("material", {
   id: serial().primaryKey(),
   inventory_number: varchar( { length: 50 }).notNull(),
   typeId: integer("type_id")
@@ -200,7 +200,7 @@ export const material = pgTable("material", {
 });
 
 
-export const materialDonations = pgTable("material_donations", {
+const materialDonations = pgTable("material_donations", {
   id: serial().primaryKey(),
   materialId: integer("material_id")
     .notNull()
@@ -212,9 +212,9 @@ export const materialDonations = pgTable("material_donations", {
   createdAt: timestamp().defaultNow()
   
 });
-export const loanStatusEnum = pgEnum("loan_status", ["active", "returned"]);
+const loanStatusEnum = pgEnum("loan_status", ["active", "returned"]);
 
-export const materialLoans = pgTable("material_loans", {
+const materialLoans = pgTable("material_loans", {
   id: serial().primaryKey(),
   materialId: integer("material_id")
     .notNull()
@@ -233,12 +233,12 @@ export const materialLoans = pgTable("material_loans", {
   delivererPhone: varchar( { length: 15 }).notNull(),
 });
 
-export const sack = pgTable("sack", {
+const sack = pgTable("sack", {
   id: serial().primaryKey(),
   name: varchar({ length: 256 }).notNull(),
 });
 
-export const sackProducts = pgTable("sack_products", {
+const sackProducts = pgTable("sack_products", {
   id: serial().primaryKey(),
   sackId: integer("sack_id")
     .notNull()
@@ -248,7 +248,7 @@ export const sackProducts = pgTable("sack_products", {
     .references(() => products.id, { onDelete: "cascade" }),
   quantity: integer().notNull(),
 });
-export const sackPatients = pgTable("sack_patients", {
+const sackPatients = pgTable("sack_patients", {
   id: serial().primaryKey(),
   sackId: integer("sack_id")
     .notNull()
@@ -264,7 +264,7 @@ export const sackPatients = pgTable("sack_patients", {
   productsSnapshot: jsonb(), // Stores the product array directly
 });
 
-export const supplyRequest = pgTable("supply_request", {
+const supplyRequest = pgTable("supply_request", {
   id: serial().primaryKey(),
   supplyRequestId: varchar({ length: 20 }).notNull().unique(),
   type: varchar({ length: 50 }).notNull(), // Can be 'product', 'material', or 'mixed'
@@ -274,7 +274,7 @@ export const supplyRequest = pgTable("supply_request", {
 });
 
 // Junction table for supply requests and products
-export const supplyRequestProducts = pgTable("supply_request_products", {
+const supplyRequestProducts = pgTable("supply_request_products", {
   id: serial().primaryKey(),
   supplyRequestId: integer().references(() => supplyRequest.id, { onDelete: 'cascade' }).notNull(),
   productId: integer().references(() => products.id).notNull(),
@@ -283,10 +283,41 @@ export const supplyRequestProducts = pgTable("supply_request_products", {
 });
 
 // Junction table for supply requests and materials
-export const supplyRequestMaterials = pgTable("supply_request_materials", {
+const supplyRequestMaterials = pgTable("supply_request_materials", {
   id: serial().primaryKey(),
   supplyRequestId: integer().references(() => supplyRequest.id, { onDelete: 'cascade' }).notNull(),
   materialId: integer().references(() => materialTypes.id).notNull(),
   quantity: integer().notNull().default(1),
   notes: varchar({ length: 512 }),
 });
+
+module.exports = {
+  RoleEnums,
+  User,
+  Donor,
+  disease,
+  city,
+  patient,
+  patientFiles,
+  products,
+  stock,
+  DonationType,
+  Donation,
+  DonationStock,
+  distributors,
+  receipt,
+  receiptDonations,
+  partner,
+  materialTypes,
+  statusEnum,
+  material,
+  materialDonations,
+  loanStatusEnum,
+  materialLoans,
+  sack,
+  sackProducts,
+  sackPatients,
+  supplyRequest,
+  supplyRequestProducts,
+  supplyRequestMaterials,
+};
